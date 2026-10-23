@@ -1,0 +1,11 @@
+{
+  "name": "imd-burn-tracker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node refresh/refresh.mjs dist/data"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

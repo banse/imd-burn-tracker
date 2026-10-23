@@ -1,0 +1,167 @@
+[
+ {
+  "keeper": "0x047f606fd5b2baa5f5c6c4ab8958e45cb6b054b7",
+  "ens": "surfsurf.eth",
+  "bridges": 19,
+  "imd_sent_to_burn": 101986.406556,
+  "eth_spent": 0.004653,
+  "first_day": "2026-05-15",
+  "last_day": "2026-09-17",
+  "rank": 1,
+  "label": "surfsurf.eth"
+ },
+ {
+  "keeper": "0xcefdb5f635bfc913d12e6eac3738e92b1681bd65",
+  "ens": "_primus.eth",
+  "bridges": 46,
+  "imd_sent_to_burn": 52046.979907,
+  "eth_spent": 0.019826,
+  "first_day": "2026-08-29",
+  "last_day": "2026-10-20",
+  "rank": 2,
+  "label": "_primus.eth"
+ },
+ {
+  "keeper": "0xa4ad5765f70cb2349bf674271c0fbeb9f4375717",
+  "ens": "rckmtl.eth",
+  "bridges": 1,
+  "imd_sent_to_burn": 923.221797,
+  "eth_spent": 0.000345,
+  "first_day": "2026-10-19",
+  "last_day": "2026-10-19",
+  "rank": 3,
+  "label": "rckmtl.eth"
+ },
+ {
+  "keeper": "0x18ccc241cce98a67564e367ebc1f1f0e692e3188",
+  "ens": "banterlytics.kongz.eth",
+  "bridges": 1,
+  "imd_sent_to_burn": 853.510619,
+  "eth_spent": 0.000441,
+  "first_day": "2026-09-23",
+  "last_day": "2026-09-23",
+  "rank": 4,
+  "label": "banterlytics.kongz.eth"
+ },
+ {
+  "keeper": "0xe5b1275fb926613d983da33fbfe1f331b7f64f2a",
+  "ens": "",
+  "bridges": 2,
+  "imd_sent_to_burn": 472.667145,
+  "eth_spent": 0.00053,
+  "first_day": "2026-08-24",
+  "last_day": "2026-10-10",
+  "rank": 5,
+  "label": "0xe5b1\u20264f2a"
+ },
+ {
+  "keeper": "0x2f9822c7de5788342ffd97dbf37a9cc17497a74a",
+  "ens": "",
+  "bridges": 1,
+  "imd_sent_to_burn": 284.378959,
+  "eth_spent": 0.00054,
+  "first_day": "2026-09-06",
+  "last_day": "2026-09-06",
+  "rank": 6,
+  "label": "0x2f98\u2026a74a"
+ },
+ {
+  "keeper": "0x88a08e229bebcd439b71accccac0b0ae8eefe0fa",
+  "ens": "",
+  "bridges": 1,
+  "imd_sent_to_burn": 225.939178,
+  "eth_spent": 0.001226,
+  "first_day": "2026-09-06",
+  "last_day": "2026-09-06",
+  "rank": 7,
+  "label": "0x88a0\u2026e0fa"
+ },
+ {
+  "keeper": "0x200e710acaa6a93bbc77146026328c40f1d60fb1",
+  "ens": "",
+  "bridges": 1,
+  "imd_sent_to_burn": 216.163855,
+  "eth_spent": 0.000324,
+  "first_day": "2026-09-02",
+  "last_day": "2026-09-02",
+  "rank": 8,
+  "label": "0x200e\u20260fb1"
+ },
+ {
+  "keeper": "0xddf8b18404fabae7bf6e30c2c74c9c1fe77d9cda",
+  "ens": "",
+  "bridges": 1,
+  "imd_sent_to_burn": 141.159611,
+  "eth_spent": 0.000268,
+  "first_day": "2026-10-11",
+  "last_day": "2026-10-11",
+  "rank": 9,
+  "label": "0xddf8\u20269cda"
+ },
+ {
+  "keeper": "0x84860b9ac8cb1060f13e17864b9ca9d86d3e62c6",
+  "ens": "cumrocket.eth",
+  "bridges": 1,
+  "imd_sent_to_burn": 33.380592,
+  "eth_spent": 0.000361,
+  "first_day": "2026-09-03",
+  "last_day": "2026-09-03",
+  "rank": 10,
+  "label": "cumrocket.eth"
+ },
+ {
+  "keeper": "0x98dfca34f8f7c42859539b6a2431d2404e05ae81",
+  "ens": "",
+  "bridges": 1,
+  "imd_sent_to_burn": 32.894574,
+  "eth_spent": 0.00125,
+  "first_day": "2026-09-04",
+  "last_day": "2026-09-04",
+  "rank": 11,
+  "label": "0x98df\u2026ae81"
+ },
+ {
+  "keeper": "0x84cb570cfea8c6afd3b6c1ab491db754886bf8e7",
+  "ens": "",
+  "bridges": 1,
+  "imd_sent_to_burn": 31.23838,
+  "eth_spent": 0.00069,
+  "first_day": "2026-08-20",
+  "last_day": "2026-08-20",
+  "rank": 12,
+  "label": "0x84cb\u2026f8e7"
+ },
+ {
+  "keeper": "0x887b86b6b6957f7bbea88b8cefd392f39236a88c",
+  "ens": "hisdudeness.eth",
+  "bridges": 1,
+  "imd_sent_to_burn": 23.280267,
+  "eth_spent": 0.001122,
+  "first_day": "2026-08-22",
+  "last_day": "2026-08-22",
+  "rank": 13,
+  "label": "hisdudeness.eth"
+ },
+ {
+  "keeper": "0xc2c69e2dee2b36bb3fcdd05c6226d2e33873153b",
+  "ens": "",
+  "bridges": 1,
+  "imd_sent_to_burn": 21.484236,
+  "eth_spent": 0.001179,
+  "first_day": "2026-09-02",
+  "last_day": "2026-09-02",
+  "rank": 14,
+  "label": "0xc2c6\u2026153b"
+ },
+ {
+  "keeper": "0x7902dc17644cb68fc421d3889e77bdd8125fddb0",
+  "ens": "fido.eth",
+  "bridges": 1,
+  "imd_sent_to_burn": 20.263118,
+  "eth_spent": 0.000518,
+  "first_day": "2026-09-23",
+  "last_day": "2026-09-23",
+  "rank": 15,
+  "label": "fido.eth"
+ }
+]

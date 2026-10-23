@@ -1,0 +1,16 @@
+[
+ {
+  "method": "Burned natively on Base",
+  "amount": 2750808.455336,
+  "burn_function": 2750763.077972,
+  "burn_wallets": 45.377364,
+  "note": "burn() on the Base token by anyone other than the BurnExecutor's receiver, plus tokens sent to 0x\u2026dEaD/0x\u20260000/0x\u20260001 on Base"
+ },
+ {
+  "method": "Bridged from Ethereum via BurnExecutor",
+  "amount": 157311.968794,
+  "burn_function": 157311.968794,
+  "burn_wallets": 0.0,
+  "note": "IMD sent from the Ethereum BurnExecutors to the Base burn receiver, which burns all it holds"
+ }
+]

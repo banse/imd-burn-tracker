@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IMD tokens burned</title>
+<meta name="description" content="IMD burned on Base, Ethereum and Robinhood Chain: totals, history, BurnExecutor split and supply.">
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* Theme tokens the dashboard page expects (imd.fun palette). Dark by default like imd.fun;
+   light when the visitor's system prefers it, or force with <html data-theme="light|dark">. */
+:root { color-scheme: dark; --color-bg: #000; --color-fg: #fff; --color-fg-muted: #9a9a9a; --color-bad: #ff6b62; --cds-dur-slow: .3s; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { color-scheme: light; --color-bg: #fff; --color-fg: #000; --color-fg-muted: #555; --color-bad: #b3261e; }
+}
+:root[data-theme="light"] { color-scheme: light; --color-bg: #fff; --color-fg: #000; --color-fg-muted: #555; --color-bad: #b3261e; }
+:root[data-theme="dark"] { color-scheme: dark; --color-bg: #000; --color-fg: #fff; --color-fg-muted: #9a9a9a; --color-bad: #ff6b62; }
+html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); }
+#dash-root { max-width: 1240px; margin: 0 auto; padding: clamp(16px, 4vw, 34px); box-sizing: border-box; }
+.dash-skeleton { color: transparent !important; background: color-mix(in srgb, var(--color-fg) 12%, var(--color-bg)); min-width: 3ch; display: inline-block; }
+@media (prefers-reduced-motion: no-preference) { .dash-skeleton { animation: dash-pulse 1.2s ease-in-out infinite alternate; } }
+@keyframes dash-pulse { from { opacity: .55; } to { opacity: 1; } }
+</style>
+<script src="d3.v7.9.0.min.js"></script>
+<script>
+/* Minimal stand-in for the Claude dashboard runtime: dash.data / dash.calc / dash.onData.
+   Loads the JSON files in data/ and recomputes calculations in the order they were declared. */
+window.dash = (function () {
+  var SOURCES = {
+    burns: 'data/imd-burns.json',
+    base_split: 'data/imd-base-split.json',
+    supply: 'data/imd-supply.json',
+    executor_bridges: 'data/imd-executor-bridges.json',
+    burn_history: 'data/imd-burn-history.json',
+    refresh_status: 'data/imd-refresh-status.json',
+    burn_breakdown: 'data/imd-burn-breakdown.json',
+    burnkeepers: 'data/imd-burnkeepers.json',
+    executor_sources: 'data/imd-executor-sources.json',
+    burn_coins: 'data/imd-burn-coins.json'
+  };
+  var state = {}, calcs = [], listeners = [], pending = false;
+  function cols(rows) { return Array.isArray(rows) && rows[0] && typeof rows[0] === 'object' ? Object.keys(rows[0]) : []; }
+  function blank(status) { return { status: status, data: [], columns: [], meta: [], refreshing: false }; }
+  function data(id) { return state[id] || blank(SOURCES[id] ? 'loading' : (calcs.some(function (c) { return c.id === id; }) ? 'loading' : 'missing')); }
+  function recompute() {
+    calcs.forEach(function (c) {
+      var ins = c.inputs.map(data);
+      if (ins.some(function (x) { return x.status === 'error'; })) { state[c.id] = blank('error'); return; }
+      if (!ins.every(function (x) { return x.status === 'ok'; })) { state[c.id] = blank('loading'); return; }
+      try {
+        var out = c.fn.apply(null, ins.map(function (x) { return x.data; }));
+        state[c.id] = { status: 'ok', data: out, columns: cols(out), meta: [], refreshing: false };
+      } catch (e) { console.error('calc ' + c.id, e); var b = blank('error'); b.message = String(e); state[c.id] = b; }
+    });
+  }
+  function run() { pending = false; recompute(); listeners.forEach(function (fn) { try { fn(); } catch (e) { console.error(e); } }); }
+  function schedule() { if (!pending) { pending = true; requestAnimationFrame(run); } }
+  Object.keys(SOURCES).forEach(function (id) {
+    fetch(SOURCES[id] + '?v=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status + ' ' + r.statusText); return r.json(); })
+      .then(function (j) {
+        var rows = Array.isArray(j) ? j : (j && (j.rows || j.data || j.results)) || [];
+        state[id] = { status: 'ok', data: rows, columns: cols(rows), meta: [], refreshing: false };
+      })
+      .catch(function (e) { console.error('load ' + id, e); var b = blank('error'); b.message = String(e); state[id] = b; })
+      .then(schedule);
+  });
+  var lastW = 0;
+  window.addEventListener('DOMContentLoaded', function () {
+    var root = document.getElementById('dash-root');
+    if (window.ResizeObserver && root) new ResizeObserver(function (en) {
+      var w = Math.round(en[0].contentRect.width); if (w !== lastW) { lastW = w; schedule(); }
+    }).observe(root);
+  });
+  return {
+    data: data,
+    calc: function (id, def) { calcs.push({ id: id, inputs: def.inputs || [], fn: def.fn }); },
+    loader: function () {},
+    onData: function (fn) { listeners.push(fn); recompute(); try { fn(); } catch (e) { console.error(e); } },
+    colors: ['var(--color-fg)'],
+    refresh: function () { location.reload(); },
+    params: function () { return {}; }, setParams: function () {}, resetParams: function () {}, setLink: function () {}
+  };
+})();
+</script>
+</head>
+<body>
+<div id="dash-root">
+<div class="ib">
+  <header class="ib-head ib-wall">
+   <div class="ib-wall-main">
+    <div class="ib-kicker">$IMD · Burn tracker</div>
+    <h1 id="title" class="ib-title">IMD tokens burned</h1>
+    <div class="ib-hero-num dash-skeleton" data-source="all_chains" data-field="total_burned" data-row="0">—</div>
+    <p class="ib-take">
+      <span data-source="all_chains" data-field="total_burned" data-row="0" class="ib-n dash-skeleton">—</span> IMD burned across Base, Ethereum and Robinhood Chain.
+      Of the Base burns, <span data-source="base_split_share" data-field="share" data-where="method=Burned natively on Base" class="ib-n dash-skeleton">—</span> were burned natively on Base and
+      <span data-source="base_split_share" data-field="share" data-where="method=Bridged from Ethereum via BurnExecutor" class="ib-n dash-skeleton">—</span> came over from Ethereum through the BurnExecutor.
+      Supply is down <span data-source="supply_change" data-field="pct" data-row="0" class="ib-n dash-skeleton">—</span> from the 10M start.
+    </p>
+    <p class="ib-asof">Snapshot <span data-source="burns" data-field="as_of" data-where="chain=Base" class="dash-skeleton">—</span> · read from each chain's public RPC</p>
+   </div>
+   <figure class="ib-pie-wrap" id="supply-pie">
+    <div class="ib-pie" data-source="all_chains supply" aria-label="imd.fun logo filled with the burned share of the 10M starting supply"></div>
+    <figcaption class="ib-pie-legend">
+      <span><span class="ib-sw ib-sw-burn"></span>Burned <span data-source="all_chains" data-field="share_of_supply" data-row="0" class="ib-n dash-skeleton">—</span></span>
+      <span><span class="ib-sw ib-sw-left"></span>Of <span data-source="supply" data-field="starting_supply" data-row="0" class="ib-n dash-skeleton">—</span> supply</span>
+    </figcaption>
+   </figure>
+  </header>
+
+  <section class="ib-kpis" id="kpis">
+    <div class="ib-card ib-kpi">
+      <div class="ib-label">All chains</div>
+      <div class="ib-big dash-skeleton" data-source="all_chains" data-field="total_burned" data-row="0">—</div>
+      <div class="ib-note">Total burned, IMD</div>
+    </div>
+    <div class="ib-card ib-kpi">
+      <div class="ib-label">Base · Fren Pet native</div>
+      <div class="ib-big dash-skeleton" data-source="burn_breakdown" data-field="total_burned" data-where="route=Base · Fren Pet native">—</div>
+      <div class="ib-note">Burned by the Base token itself ("Fren Pet")</div>
+    </div>
+    <div class="ib-card ib-kpi">
+      <div class="ib-label">Base · via BurnExecutor</div>
+      <div class="ib-big dash-skeleton" data-source="burn_breakdown" data-field="total_burned" data-where="route=Base · via BurnExecutor">—</div>
+      <div class="ib-note">Collected on Ethereum, burned on Base</div>
+    </div>
+    <div class="ib-card ib-kpi">
+      <div class="ib-label">Ethereum</div>
+      <div class="ib-big dash-skeleton" data-source="burns" data-field="total_burned" data-where="chain=Ethereum">—</div>
+      <div class="ib-note">Bridged IMD, sent to 0x…dEaD</div>
+    </div>
+    <div class="ib-card ib-kpi">
+      <div class="ib-label">Robinhood Chain</div>
+      <div class="ib-big dash-skeleton" data-source="burns" data-field="total_burned" data-where="chain=Robinhood Chain">—</div>
+      <div class="ib-note">Bridged IMD, sent to 0x…dEaD</div>
+    </div>
+  </section>
+
+  <section class="ib-kpis ib-outlook" id="outlook">
+    <div class="ib-card ib-kpi">
+      <div class="ib-label">Of total supply burned</div>
+      <div class="ib-big dash-skeleton" data-source="all_chains" data-field="share_of_supply" data-row="0">—</div>
+      <div class="ib-note">Burned on all chains, out of the 10,000,000 IMD ever minted</div>
+    </div>
+    <div class="ib-card ib-kpi">
+      <div class="ib-label">Until all IMD is burned</div>
+      <div class="ib-big dash-skeleton" data-source="burn_eta" data-field="years_left" data-row="0">—</div>
+      <div class="ib-note">At the last 30 days' pace of <span data-source="burn_eta" data-field="daily_rate" data-row="0" class="ib-n dash-skeleton">—</span> IMD/day, the remaining <span data-source="burn_eta" data-field="remaining" data-row="0" class="ib-n dash-skeleton">—</span> IMD would be gone around <span data-source="burn_eta" data-field="eta_date" data-row="0" class="ib-n dash-skeleton">—</span>. A straight-line estimate: the pace changes month to month.</div>
+    </div>
+  </section>
+
+  <section class="ib-card" id="history">
+    <h2 class="ib-h">Burns over time</h2>
+    <div class="ib-hist-head">
+      <p class="ib-sub">Total IMD burned so far, at the end of each day since the Base token launched on Aug 31, 2023.</p>
+      <div class="ib-seg" role="group" aria-label="Time range">
+        <button type="button" data-range="all" aria-pressed="false">All</button>
+        <button type="button" data-range="365" aria-pressed="true">12 months</button>
+        <button type="button" data-range="90" aria-pressed="false">90 days</button>
+      </div>
+    </div>
+    <p class="ib-recent">Last 30 days: <span data-source="recent_burns" data-field="last_30" data-row="0" class="ib-n dash-skeleton">—</span> IMD burned, <span data-source="recent_burns" data-field="change" data-row="0" class="ib-n dash-skeleton">—</span> vs. the 30 days before (<span data-source="recent_burns" data-field="prior_30" data-row="0" class="ib-n dash-skeleton">—</span>).</p>
+    <div class="ib-legend ib-legend-top">
+      <span><span class="ib-sw" style="background: var(--ib-c0)"></span>Burned natively on Base</span>
+      <span><span class="ib-sw" style="background: var(--ib-c1)"></span>Via BurnExecutor</span>
+      <span><span class="ib-sw" style="background: var(--ib-c2)"></span>Ethereum &amp; Robinhood burn wallets</span>
+    </div>
+    <div class="ib-area" data-source="history_series"></div>
+
+    <h3 class="ib-h3" id="per-month">Burned per month</h3>
+    <p class="ib-sub">IMD burned in each calendar month, split the same way. The current month is partial.</p>
+    <div class="ib-months" data-source="monthly_burns"></div>
+    <p class="ib-foot">BurnExecutor amounts are dated by their Ethereum bridge transaction; the burn on Base can land up to a day later, so the native line dips by up to ~1,700 IMD on two days. Base is sampled at midnight UTC each day; Ethereum and Robinhood are summed from every transfer into their burn wallets.</p>
+  </section>
+
+  <section class="ib-card" id="base-split">
+    <h2 class="ib-h">Base burns: native vs. BurnExecutor</h2>
+    <p class="ib-sub">The BurnExecutor on Ethereum collects IMD, bridges it to a burn receiver on Base (0xf9d7…6793) and the receiver burns everything it holds. Everything else burned on Base counts as native.</p>
+    <div class="ib-split">
+      <div class="ib-split-item">
+        <div class="ib-label"><span class="ib-sw" style="background: var(--ib-c0)"></span>Burned natively on Base</div>
+        <div class="ib-big dash-skeleton" data-source="base_split" data-field="amount" data-where="method=Burned natively on Base">—</div>
+        <div class="ib-note"><span data-source="base_split" data-field="burn_function" data-where="method=Burned natively on Base" class="ib-n dash-skeleton">—</span> via burn() plus <span data-source="base_split" data-field="burn_wallets" data-where="method=Burned natively on Base" class="ib-n dash-skeleton">—</span> sent to burn wallets</div>
+      </div>
+      <div class="ib-split-item">
+        <div class="ib-label"><span class="ib-sw" style="background: var(--ib-c1)"></span>Bridged from Ethereum via BurnExecutor</div>
+        <div class="ib-big dash-skeleton" data-source="base_split" data-field="amount" data-where="method=Bridged from Ethereum via BurnExecutor">—</div>
+        <div class="ib-note"><span data-source="executor_summary" data-field="bridges" data-row="0" class="ib-n dash-skeleton">—</span> bridge transactions, <span data-source="executor_summary" data-field="first_day" data-row="0" class="dash-skeleton">—</span> to <span data-source="executor_summary" data-field="last_day" data-row="0" class="dash-skeleton">—</span></div>
+      </div>
+    </div>
+    <div class="ib-stack" data-source="base_split" aria-label="Share of Base burns by method"></div>
+    <p class="ib-sub ib-pending">Not burned yet: <span data-source="supply" data-field="awaiting_executor" data-row="0" class="ib-n dash-skeleton">—</span> IMD waiting in the two BurnExecutors on Ethereum for the next bridge, and <span data-source="supply" data-field="stuck_old_receiver" data-row="0" class="ib-n dash-skeleton">—</span> IMD sitting in the old Base receiver (0x4b11…EaDA), whose burn call doesn't match the token, so it can't be burned.</p>
+
+    <h3 class="ib-h3" id="executor-over-time">BurnExecutor burns over time</h3>
+    <p class="ib-sub">Running total of IMD bridged from Ethereum to the Base burn receiver, by day.</p>
+    <div class="ib-line" data-source="executor_cumulative"></div>
+  </section>
+
+  <section class="ib-card" id="burnkeepers">
+    <h2 class="ib-h">Burnkeepers</h2>
+    <p class="ib-sub">Wallets that sign the Ethereum transactions sending the BurnExecutor's IMD to Base, where it is burned. On the current executor anyone can do this; the caller pays the LayerZero fee and gas.</p>
+    <p class="ib-recent"><span data-source="keeper_summary" data-field="keepers" data-row="0" class="ib-n dash-skeleton">—</span> burnkeepers have triggered <span data-source="keeper_summary" data-field="bridges" data-row="0" class="ib-n dash-skeleton">—</span> bridges, sending <span data-source="keeper_summary" data-field="imd" data-row="0" class="ib-n dash-skeleton">—</span> IMD to burn and spending <span data-source="keeper_summary" data-field="eth" data-row="0" class="ib-n dash-skeleton">—</span> ETH on fees.</p>
+    <h3 class="ib-h3" id="keepers-top">Top 10 by IMD sent to burn</h3>
+    <div class="ib-chart ib-bars-keepers" data-source="burnkeepers"></div>
+    <div class="ib-tablewrap ib-scroll">
+      <table class="ib-table" id="keepers-table" data-source="burnkeepers" data-row-key="keeper">
+        <thead><tr>
+          <th data-field="keeper">Wallet</th>
+          <th data-field="bridges" class="num">Bridges</th>
+          <th data-field="imd_sent_to_burn" class="num">IMD sent to burn</th>
+          <th data-field="eth_spent" class="num ib-hide">ETH spent</th>
+          <th data-field="last_day" class="ib-hide">Last bridge</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ib-card" id="executor-sources">
+    <h2 class="ib-h">Where the BurnExecutor's IMD comes from</h2>
+    <p class="ib-sub">Every IMD transfer into the two BurnExecutors on Ethereum, grouped by where it came from. Moves between the two executors are left out.</p>
+    <div class="ib-chart ib-bars-sources" data-source="executor_sources"></div>
+    <p class="ib-foot">Community coins: the LaunchpadHook's burn fee on every community-coin trade, sent in batches. IMD/ETH pool: the CappedBurnHook on the main IMD/ETH Uniswap v4 pool, plus a few other v4 routes. Swarm launches: contracts launched through imd.fun that pass IMD to the executor. Named wallets send IMD by hand.</p>
+  </section>
+
+  <section class="ib-card" id="burn-coins">
+    <h2 class="ib-h">Launched tokens with built-in burns</h2>
+    <p class="ib-sub">Community coins (communitycoins.imd.fun) pay a burn fee in IMD on every trade. Swarm launches (imd.fun Launch, Ethereum) are listed when they have burn contracts or have sent IMD to the BurnExecutor. Ordered by IMD sent to burn.</p>
+    <p class="ib-recent"><span data-source="burn_coin_summary" data-field="with_burns" data-row="0" class="ib-n dash-skeleton">—</span> of <span data-source="burn_coin_summary" data-field="total" data-row="0" class="ib-n dash-skeleton">—</span> launched tokens with a burn feature have sent IMD to burn so far: <span data-source="burn_coin_summary" data-field="imd" data-row="0" class="ib-n dash-skeleton">—</span> IMD in total.</p>
+    <h3 class="ib-h3" id="coins-top">Top 10</h3>
+    <div class="ib-chart ib-bars-coins" data-source="burn_coins"></div>
+    <div class="ib-table-tools"><input type="search" class="ib-search" placeholder="Search name, symbol or address" aria-label="Search launched tokens"></div>
+    <div class="ib-tablewrap ib-scroll">
+      <table class="ib-table" id="coins-table" data-source="burn_coins" data-row-key="address">
+        <thead><tr>
+          <th data-field="rank" class="num">#</th>
+          <th data-field="name">Token</th>
+          <th data-field="type" class="ib-hide">Type</th>
+          <th data-field="imd_to_burn" class="num">IMD sent to burn</th>
+          <th data-field="trades" class="num ib-hide">Trades</th>
+          <th data-field="volume_eth" class="num ib-hide">Volume ETH</th>
+          <th data-field="launched" class="ib-hide">Launched</th>
+          <th data-field="address" class="ib-hide">Address</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ib-card" id="supply">
+    <h2 class="ib-h">Supply: start vs. now</h2>
+    <p class="ib-sub">All IMD comes from the 10,000,000 minted once on Base; the Ethereum and Robinhood tokens are backed by IMD locked in the Base bridge contract, so Base's total supply is the whole supply.</p>
+    <div class="ib-supply">
+      <div class="ib-split-item">
+        <div class="ib-label">Starting supply</div>
+        <div class="ib-big dash-skeleton" data-source="supply" data-field="starting_supply" data-row="0">—</div>
+        <div class="ib-note">Minted once at launch on Base</div>
+      </div>
+      <div class="ib-split-item">
+        <div class="ib-label">Supply now</div>
+        <div class="ib-big dash-skeleton" data-source="supply" data-field="supply_now" data-row="0">—</div>
+        <div class="ib-note"><span data-source="supply_change" data-field="burned_since_start" data-row="0" class="ib-n dash-skeleton">—</span> fewer, <span data-source="supply_change" data-field="pct" data-row="0" class="ib-n dash-skeleton">—</span></div>
+      </div>
+      <div class="ib-split-item">
+        <div class="ib-label">Circulating now</div>
+        <div class="ib-big dash-skeleton" data-source="supply" data-field="circulating_now" data-row="0">—</div>
+        <div class="ib-note">Supply now minus <span data-source="supply" data-field="in_burn_wallets" data-row="0" class="ib-n dash-skeleton">—</span> in burn wallets on all chains</div>
+      </div>
+    </div>
+    <div class="ib-compare" data-source="supply"></div>
+    <h3 class="ib-h3" id="where-supply">Where today's supply sits</h3>
+    <div class="ib-stack" data-source="supply" id="supply-stack"></div>
+    <div class="ib-legend">
+      <span><span class="ib-sw" style="background: var(--ib-c0)"></span>On Base <span data-source="supply" data-field="on_base" data-row="0" class="ib-n dash-skeleton">—</span></span>
+      <span><span class="ib-sw" style="background: var(--ib-c1)"></span>Bridged out <span data-source="supply" data-field="locked_for_bridges" data-row="0" class="ib-n dash-skeleton">—</span>: Ethereum <span data-source="supply" data-field="on_ethereum" data-row="0" class="ib-n dash-skeleton">—</span>, Robinhood <span data-source="supply" data-field="on_robinhood" data-row="0" class="ib-n dash-skeleton">—</span></span>
+    </div>
+  </section>
+
+  <section class="ib-card" id="by-chain">
+    <h2 class="ib-h">Burned per route</h2>
+    <p class="ib-sub">Base is split into the Fren Pet token's own burns and the IMD that arrives through the BurnExecutor. Ethereum and Robinhood are small enough to barely show as bars; each bar is labeled.</p>
+    <div class="ib-chart ib-bars-routes" data-source="burn_breakdown"></div>
+  </section>
+
+  <section class="ib-card" id="breakdown">
+    <h2 class="ib-h">How the burns break down</h2>
+    <p class="ib-sub"><b class="ib-b">Burned via burn()</b>: tokens destroyed by the Base token's burn function, measured as 10,000,000 minted minus today's Base supply, split into the Fren Pet token's own burns and the BurnExecutor's. <b class="ib-b">Sent to burn wallets</b>: tokens held by 0x…dEaD, 0x…0000 and 0x…0001, which no one can spend.</p>
+    <div class="ib-tablewrap">
+      <table class="ib-table" id="breakdown-table" data-source="burn_breakdown" data-row-key="route">
+        <thead><tr>
+          <th data-field="route">Route</th>
+          <th data-field="burn_function" class="num">Burned via burn()</th>
+          <th data-field="burn_wallets" class="num">Sent to burn wallets</th>
+          <th data-field="total_burned" class="num">Total burned</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ib-card" id="supply-per-chain">
+    <h2 class="ib-h">Supply per chain</h2>
+    <p class="ib-sub">Circulating IMD on each chain. Base's own totalSupply also counts the IMD locked in the Base bridge contract that backs every bridged token on Ethereum and Robinhood, so Base is shown without it. Added up, the three chains equal Base's total supply and stay below the 10M start.</p>
+    <div class="ib-tablewrap">
+      <table class="ib-table" id="supply-table" data-source="burns" data-row-key="chain">
+        <thead><tr>
+          <th data-field="chain">Chain</th>
+          <th data-field="circulating_on_chain" class="num">Circulating on chain</th>
+          <th data-field="current_supply" class="num ib-hide">totalSupply()</th>
+          <th data-field="locked_in_bridge" class="num ib-hide">Locked for bridges</th>
+          <th data-field="block" class="num ib-hide">Block</th>
+          <th data-field="contract" class="ib-hide">Contract</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="ib-recent ib-pending">All chains: <span data-source="supply_check" data-field="total_circulating" data-row="0" class="ib-n dash-skeleton">—</span> IMD circulating, against Base's totalSupply of <span data-source="supply_check" data-field="base_total" data-row="0" class="ib-n dash-skeleton">—</span> (<span data-source="supply_check" data-field="diff" data-row="0" class="ib-n dash-skeleton">—</span> in transit on the bridge).</p>
+  </section>
+  <p class="ib-foot">Ordinary bridging (IMD locked on Base and minted on Ethereum or Robinhood, or burned there and released on Base) is not counted: it moves IMD, it doesn't remove it.</p>
+  <p class="ib-foot ib-status" id="refresh-status">Last refresh <span data-source="refresh_status" data-field="last_success_at" data-row="0" class="ib-n dash-skeleton">—</span> · last request <span data-source="refresh_status" data-field="last_attempt_at" data-row="0" class="dash-skeleton">—</span>: <span data-source="refresh_status" data-field="last_result" data-row="0" class="ib-n dash-skeleton">—</span> · <span data-source="refresh_status" data-field="message" data-row="0" class="dash-skeleton">—</span> Updates run on request, at most once a day.</p>
+</div>
+
+<style>
+/* imd.fun-aligned: monochrome ink on paper, IBM Plex Mono, 1.5px rules, uppercase micro-labels, blue "wall" hero */
+.ib {
+  --ib-ink: var(--color-fg);
+  --ib-paper: var(--color-bg);
+  --ib-dim: var(--color-fg-muted);
+  --ib-c0: var(--ib-ink);
+  --ib-c1: color-mix(in srgb, var(--color-fg) 52%, var(--color-bg));
+  --ib-c2: color-mix(in srgb, var(--color-fg) 24%, var(--color-bg));
+  --ib-soft: color-mix(in srgb, var(--color-fg) 13%, var(--color-bg));
+  --ib-rule: 1.5px solid var(--ib-ink);
+  --ib-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  display: grid; gap: 18px;
+  font-family: var(--ib-mono); font-size: 13px; line-height: 1.55; color: var(--ib-ink);
+  font-variant-numeric: tabular-nums;
+}
+.ib-wall {
+  /* inverted to the panels: ink background, paper text (white on black in dark mode, black on white in light) */
+  background: var(--ib-ink);
+  border: var(--ib-rule);
+  --ib-inv-dim: color-mix(in srgb, var(--color-bg) 62%, var(--color-fg));
+  color: var(--ib-paper); padding: clamp(20px, 4vw, 34px);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 36px; align-items: center;
+  --ib-pie-burn: var(--ib-paper);
+  --ib-pie-left: color-mix(in srgb, var(--color-bg) 16%, var(--color-fg));
+}
+.ib-wall-main { display: grid; gap: 10px; min-width: 0; }
+.ib-pie-wrap { margin: 0; display: grid; justify-items: center; gap: 10px; }
+.ib-pie { position: relative; width: clamp(140px, 16vw, 190px); aspect-ratio: 1; }
+.ib-pie-legend { display: grid; gap: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ib-inv-dim); }
+.ib-pie-legend > span { display: inline-flex; align-items: center; gap: 8px; }
+.ib-pie-legend .ib-n { color: var(--ib-paper); }
+.ib-sw-burn { background: var(--ib-pie-burn); }
+.ib-sw-burn { outline: 1px solid var(--ib-paper); }
+.ib-sw-left { outline: 1px solid var(--ib-paper); }
+.ib-pie svg { display: block; overflow: visible; }
+.ib-logo-burn { transform-box: view-box; transform-origin: 16px 29px; }
+@media (prefers-reduced-motion: no-preference) {
+  .ib-rise { animation: ib-rise var(--cds-dur-slow, .3s) cubic-bezier(.16, 1, .3, 1) both; animation-duration: 1.4s; }
+  @keyframes ib-rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+}
+.ib-sw-left { background: var(--ib-pie-left); }
+@media (max-width: 620px) { .ib-wall { grid-template-columns: 1fr; } .ib-pie-wrap { justify-items: start; grid-template-columns: auto 1fr; align-items: center; } .ib-pie { width: 120px; } }
+.ib-kicker, .ib-label, .ib-h, .ib-table th, .ib-seg button {
+  text-transform: uppercase; letter-spacing: .1em; font-size: 11px; font-weight: 600;
+}
+.ib-kicker { color: var(--ib-inv-dim); letter-spacing: .18em; }
+.ib-title { margin: 0; font-family: var(--ib-mono); font-weight: 600; font-size: clamp(22px, 3.4vw, 28px); letter-spacing: -.03em; line-height: 1.15; color: var(--ib-paper); }
+.ib-hero-num { font-family: var(--ib-mono); font-weight: 600; font-size: clamp(34px, 5.2vw, 56px); letter-spacing: -.03em; line-height: 1.05; color: var(--ib-paper); }
+.ib-take { margin: 0; max-width: 62ch; font-size: 13px; color: var(--ib-paper); opacity: .85; text-wrap: pretty; }
+.ib-wall .ib-n { color: var(--ib-paper); }
+.ib-asof { margin: 0; font-size: 11px; color: var(--ib-inv-dim); letter-spacing: .04em; }
+.ib-status { padding-top: 10px; border-top: 1px solid var(--ib-soft); }
+.ib-foot { margin: 0; color: var(--ib-dim); font-size: 11px; }
+.ib-n { font-variant-numeric: tabular-nums; font-weight: 600; }
+.ib-kpis.ib-outlook { grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+.ib-kpis { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+.ib-card { position: relative; background: var(--ib-paper); border: var(--ib-rule); border-radius: 0; padding: 0 20px 20px; min-width: 0; }
+.ib-kpi { display: grid; gap: 6px; align-content: start; padding: 15px 20px; }
+.ib-label { color: var(--ib-dim); display: flex; align-items: center; gap: 8px; font-size: 10.5px; }
+.ib-big { font-family: var(--ib-mono); font-weight: 600; font-size: clamp(22px, 2.6vw, 28px); letter-spacing: -.03em; line-height: 1.15; }
+.ib-note { font-size: 11.5px; color: var(--ib-dim); }
+.ib-h { margin: 0 -20px 16px; padding: 14px 20px; border-bottom: var(--ib-rule); font-size: 12px; }
+.ib-h3 { margin: 26px 0 0; padding-top: 14px; border-top: 1px solid var(--ib-soft); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; }
+.ib-sub { margin: 6px 0 14px; font-size: 12px; color: var(--ib-dim); max-width: 80ch; }
+.ib .ib-b { font-weight: 600; color: var(--ib-ink); }
+.ib-split, .ib-supply { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); margin-bottom: 16px; }
+.ib-split-item { display: grid; gap: 6px; align-content: start; padding: 12px 14px; border: 1px solid var(--ib-soft); }
+.ib-sw { display: inline-block; width: 9px; height: 9px; border-radius: 0; flex: none; }
+.ib-stack { display: flex; height: 14px; overflow: hidden; gap: 2px; background: var(--ib-soft); min-height: 14px; border-radius: 0; }
+.ib-stack > div { height: 100%; min-width: 3px; transition: opacity .2s cubic-bezier(.16,1,.3,1); }
+.ib-stack > div:hover { opacity: .8; }
+.ib-pending { margin-top: 10px; }
+.ib-legend { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 10px; font-size: 11.5px; color: var(--ib-dim); }
+.ib-legend > span { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; max-width: 100%; }
+.ib-hist-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.ib-hist-head .ib-sub { margin-top: 0; flex: 1 1 22rem; }
+.ib-seg { display: inline-flex; border: var(--ib-rule); flex: none; height: 32px; }
+.ib-seg button { font-family: var(--ib-mono); font-size: 10.5px; background: var(--ib-paper); color: var(--ib-ink); border: 0; padding: 0 12px; cursor: pointer; }
+.ib-seg button + button { border-left: var(--ib-rule); }
+.ib-seg button:hover { background: var(--ib-soft); }
+.ib-seg button[aria-pressed="true"] { background: var(--ib-ink); color: var(--ib-paper); }
+.ib-recent { margin: 0 0 12px; font-size: 13px; }
+.ib-legend-top { margin: 0 0 10px; }
+.ib-area { position: relative; min-height: 280px; }
+.ib-months { position: relative; min-height: 220px; }
+.ib-chart { position: relative; min-height: 156px; }
+.ib-line { position: relative; min-height: 220px; }
+.ib-compare { position: relative; min-height: 92px; }
+.ib svg text { font-family: var(--ib-mono); }
+.ib-tip { position: absolute; background: var(--ib-paper); color: var(--ib-ink); border: var(--ib-rule); border-radius: 0; box-shadow: none; padding: 8px 10px; font-size: 11.5px; pointer-events: none; white-space: nowrap; display: none; z-index: 2; }
+.ib-tip .k { color: var(--ib-dim); text-transform: uppercase; letter-spacing: .08em; font-size: 10.5px; margin-bottom: 2px; }
+.ib-tablewrap { overflow-x: auto; }
+.ib-scroll { max-height: 460px; overflow: auto; margin-top: 14px; }
+.ib-scroll .ib-table th { position: sticky; top: 0; background: var(--ib-paper); z-index: 1; }
+.ib-table-tools { margin-top: 16px; }
+.ib-search { width: min(100%, 22rem); box-sizing: border-box; height: 32px; padding: 0 10px; font-family: var(--ib-mono); font-size: 12px; color: var(--ib-ink); background: var(--ib-paper); border: var(--ib-rule); border-radius: 0; }
+.ib-search:focus { outline: 2px solid var(--ib-c1); outline-offset: 1px; }
+.ib-table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.ib-table th { text-align: left; font-size: 10.5px; color: var(--ib-dim); padding: 8px 10px; border-bottom: var(--ib-rule); }
+.ib-table td { padding: 10px; border-bottom: 1px solid var(--ib-soft); vertical-align: top; }
+.ib-table tbody tr:hover td { background: color-mix(in srgb, var(--color-fg) 5%, var(--color-bg)); }
+.ib-table .num { text-align: right; }
+.ib-table td.mono { font-size: 11px; word-break: break-all; color: var(--ib-dim); }
+.ib-table td .tok { display: block; color: var(--ib-dim); font-size: 11px; }
+@media (max-width: 640px) { .ib-hide { display: none; } }
+[data-dash-source-state=empty] { color: transparent; }
+[data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+.ib-wall .dash-skeleton { opacity: .6; }
+.ib-fail { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: inherit; height: 100%; color: var(--ib-dim); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+.ib-fail::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--color-bad); }
+</style>
+
+<script>
+dash.calc('all_chains', {
+  title: 'All-chain burn totals',
+  description: 'Adds up burns on all three chains and works out Base\'s share of them, and the share of the 10M starting supply burned.',
+  inputs: ['burns'],
+  fn: (burns) => {
+    const total = burns.reduce((s, r) => s + Number(r.total_burned), 0);
+    const base = burns.find(r => r.chain === 'Base');
+    return [{
+      total_burned: total,
+      base_share_of_burns: base ? Number(base.total_burned) / total : null,
+      base_share_of_supply: base ? Number(base.total_burned) / Number(base.initial_supply) : null,
+      share_of_supply: base ? total / Number(base.initial_supply) : null
+    }];
+  }
+});
+
+dash.calc('base_split_share', {
+  title: 'Share of Base burns',
+  description: 'Each burn method\'s share of everything burned on Base.',
+  inputs: ['base_split'],
+  fn: (base_split) => {
+    const total = base_split.reduce((s, r) => s + Number(r.amount), 0);
+    return base_split.map(r => ({ method: r.method, share: total ? Number(r.amount) / total : null }));
+  }
+});
+
+dash.calc('supply_change', {
+  title: 'Supply change since start',
+  description: 'How much smaller the supply is now than the 10M starting supply, in IMD and as a share.',
+  inputs: ['supply'],
+  fn: (supply) => {
+    const s = supply[0];
+    const gone = Number(s.starting_supply) - Number(s.supply_now);
+    return [{ burned_since_start: gone, pct: gone / Number(s.starting_supply) }];
+  }
+});
+
+dash.calc('executor_cumulative', {
+  title: 'BurnExecutor running total',
+  description: 'IMD bridged to the Base burn receiver per day, with a running total.',
+  inputs: ['executor_bridges'],
+  fn: (executor_bridges) => {
+    const byDay = new Map();
+    executor_bridges
+      .filter(r => r.base_receiver === '0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793')
+      .forEach(r => byDay.set(r.day, (byDay.get(r.day) || 0) + Number(r.amount)));
+    let run = 0;
+    return Array.from(byDay.keys()).sort().map(day => { run += byDay.get(day); return { day, amount: byDay.get(day), cumulative: run }; });
+  }
+});
+
+dash.calc('executor_summary', {
+  title: 'BurnExecutor bridge count',
+  description: 'Number of bridge-for-burn transactions to the current Base receiver and the first and last day.',
+  inputs: ['executor_bridges'],
+  fn: (executor_bridges) => {
+    const rows = executor_bridges.filter(r => r.base_receiver === '0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793');
+    const days = rows.map(r => r.day).sort();
+    return [{ bridges: rows.length, first_day: days[0], last_day: days[days.length - 1] }];
+  }
+});
+
+dash.calc('history_series', {
+  title: 'Daily cumulative burns',
+  description: 'Per day: Base burns split into native and BurnExecutor (executor bridges summed by day), plus Ethereum and Robinhood burn-wallet totals.',
+  inputs: ['burn_history', 'executor_bridges'],
+  fn: (burn_history, executor_bridges) => {
+    const perDay = {};
+    executor_bridges
+      .filter(r => r.base_receiver === '0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793')
+      .forEach(r => { perDay[r.day] = (perDay[r.day] || 0) + Number(r.amount); });
+    let run = 0;
+    return burn_history.map(r => {
+      run += perDay[r.day] || 0;
+      const base = Number(r.base_burned);
+      const other = Number(r.ethereum_burned) + Number(r.robinhood_burned);
+      return { day: r.day, base_native: base - run, base_executor: run, other_chains: other, total: base + other };
+    });
+  }
+});
+
+dash.calc('monthly_burns', {
+  title: 'Burns per month',
+  description: 'IMD burned in each calendar month: month-end running total minus the previous month-end.',
+  inputs: ['history_series'],
+  fn: (history_series) => {
+    const ends = new Map();
+    history_series.forEach(r => ends.set(r.day.slice(0, 7), r));
+    let prev = { base_native: 0, base_executor: 0, other_chains: 0, total: 0 };
+    return Array.from(ends.entries()).map(([month, r]) => {
+      const row = { month, base_native: r.base_native - prev.base_native, base_executor: r.base_executor - prev.base_executor,
+        other_chains: r.other_chains - prev.other_chains, total: r.total - prev.total };
+      prev = r;
+      return row;
+    });
+  }
+});
+
+dash.calc('recent_burns', {
+  title: 'Last 30 days vs prior 30',
+  description: 'IMD burned on all chains in the last 30 days and the 30 days before, and the change between them.',
+  inputs: ['history_series'],
+  fn: (history_series) => {
+    const n = history_series.length;
+    if (n < 61) return [];
+    const t = (i) => history_series[i].total;
+    const last = t(n - 1) - t(n - 31), prior = t(n - 31) - t(n - 61);
+    return [{ last_30: last, prior_30: prior, change: prior ? (last - prior) / prior : null }];
+  }
+});
+
+dash.calc('keeper_summary', {
+  title: 'Burnkeeper totals',
+  description: 'How many wallets have triggered BurnExecutor bridges, how many bridges, the IMD they sent to burn and the ETH they spent on fees.',
+  inputs: ['burnkeepers'],
+  fn: (burnkeepers) => [{
+    keepers: burnkeepers.length,
+    bridges: burnkeepers.reduce((t, k) => t + Number(k.bridges), 0),
+    imd: burnkeepers.reduce((t, k) => t + Number(k.imd_sent_to_burn), 0),
+    eth: burnkeepers.reduce((t, k) => t + Number(k.eth_spent), 0)
+  }]
+});
+
+dash.calc('burn_coin_summary', {
+  title: 'Launched tokens with burns',
+  description: 'How many launched tokens with a burn feature have sent IMD to burn, out of all listed, and the total.',
+  inputs: ['burn_coins'],
+  fn: (burn_coins) => [{
+    with_burns: burn_coins.filter(c => Number(c.imd_to_burn) > 0).length,
+    total: burn_coins.length,
+    imd: burn_coins.reduce((t, c) => t + Number(c.imd_to_burn), 0)
+  }]
+});
+
+dash.calc('supply_check', {
+  title: 'Circulating across chains',
+  description: 'Circulating IMD added up over Base, Ethereum and Robinhood, against Base totalSupply; the difference is IMD in transit on the bridge.',
+  inputs: ['burns'],
+  fn: (burns) => {
+    const total = burns.reduce((t, r) => t + Number(r.circulating_on_chain), 0);
+    const base = burns.find(r => r.chain === 'Base');
+    const baseTotal = base ? Number(base.current_supply) : null;
+    return [{ total_circulating: total, base_total: baseTotal, diff: baseTotal == null ? null : baseTotal - total }];
+  }
+});
+
+dash.calc('burn_eta', {
+  title: 'Time until all IMD is burned',
+  description: 'Circulating IMD divided by the average daily burn of the last 30 days, as years and an estimated date.',
+  inputs: ['recent_burns', 'supply'],
+  fn: (recent_burns, supply) => {
+    const r = recent_burns[0], s = supply[0];
+    if (!r || !s) return [];
+    const daily = Number(r.last_30) / 30;
+    const remaining = Number(s.circulating_now);
+    if (!(daily > 0)) return [{ daily_rate: daily, remaining, days_left: null, years_left: null, eta_date: null }];
+    const days = remaining / daily;
+    const eta = new Date(new Date(s.as_of).getTime() + days * 86400000).toISOString().slice(0, 10);
+    return [{ daily_rate: daily, remaining, days_left: days, years_left: days / 365.25, eta_date: eta }];
+  }
+});
+
+(() => {
+  const root = document.querySelector('.ib');
+  let range = '365';
+  const SERIES = [
+    { key: 'base_native', label: 'Burned natively on Base', ci: 0 },
+    { key: 'base_executor', label: 'Via BurnExecutor', ci: 1 },
+    { key: 'other_chains', label: 'Ethereum & Robinhood burn wallets', ci: 2 }
+  ];
+
+  root.querySelectorAll('.ib-seg button').forEach(btn => btn.addEventListener('click', () => {
+    range = btn.dataset.range;
+    root.querySelectorAll('.ib-seg button').forEach(x => x.setAttribute('aria-pressed', String(x === btn)));
+    drawHistory();
+  }));
+  // imd.fun palette: ink, mid grey, light grey (follows light/dark theme)
+  const PAL = ['var(--ib-c0)', 'var(--ib-c1)', 'var(--ib-c2)'];
+  const short = (t, n = 30) => (t && t.length > n ? t.slice(0, n - 1) + '…' : t || '');
+  const coinSearch = root.querySelector('.ib-search');
+  coinSearch.addEventListener('input', () => drawCoins());
+  const compact = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 2 });
+  const fmt2 = d3.format(',.2f');
+  const big = (v) => Math.abs(v) >= 10000 ? compact.format(v) : fmt2(v);
+  const pct = d3.format('.1%');
+  const when = (s) => new Date(s).toLocaleString('en', { dateStyle: 'medium', timeStyle: 'short' });
+  const dayFmt = (s) => d3.utcFormat('%b %-d, %Y')(new Date(s + 'T00:00:00Z'));
+  const isFail = (st) => st === 'error' || st === 'connect';
+
+  function failLine(box) { const d = document.createElement('div'); d.className = 'ib-fail'; d.textContent = 'Failed to load'; box.append(d); }
+
+  // generic fill of single-value marks
+  function fillMarks(id, rowsOf, format) {
+    const res = dash.data(id);
+    const rows = res.status === 'ok' ? (res.data || []) : [];
+    root.querySelectorAll(`[data-source="${id}"][data-field]:not(th)`).forEach(el => {
+      let r = null;
+      if (el.dataset.row != null) r = rows[Number(el.dataset.row)];
+      else if (el.dataset.where) {
+        const [k, v] = el.dataset.where.split('=').map(decodeURIComponent);
+        r = rows.find(x => String(x[k]) === v);
+      }
+      if (!r) { el.textContent = '—'; if (res.status !== 'loading') el.classList.remove('dash-skeleton'); return; }
+      el.textContent = format(el.dataset.field, r[el.dataset.field], el);
+      el.classList.remove('dash-skeleton');
+    });
+    return { res, rows };
+  }
+
+  function tooltipFor(box) { const t = document.createElement('div'); t.className = 'ib-tip'; box.append(t); return t; }
+  function showTip(tip, box, ev, key, line) {
+    tip.replaceChildren();
+    const k = document.createElement('div'); k.className = 'k'; k.textContent = key;
+    const v = document.createElement('div'); v.textContent = line;
+    tip.append(k, v); tip.style.display = 'block';
+    const [mx, my] = d3.pointer(ev, box);
+    tip.style.left = Math.min(Math.max(0, mx + 12), box.clientWidth - tip.offsetWidth) + 'px';
+    tip.style.top = Math.max(0, my - tip.offsetHeight - 8) + 'px';
+  }
+
+  function stack(box, parts, keyLabel) {
+    box.replaceChildren();
+    const total = d3.sum(parts, p => p.v);
+    if (!total) return;
+    const tip = box._tip || (box._tip = tooltipFor(box.parentElement));
+    parts.forEach(p => {
+      const seg = document.createElement('div');
+      seg.style.flex = `${p.v / total} 1 0`;
+      seg.style.background = p.color;
+      seg.addEventListener('mousemove', (ev) => showTip(tip, box.parentElement, ev, p.label, `${fmt2(p.v)} IMD (${pct(p.v / total)})`));
+      seg.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+      box.append(seg);
+    });
+  }
+
+  dash.onData(() => {
+    const a = fillMarks('all_chains', null, (f, v, el) => v == null ? '—' : f.includes('share') ? d3.format('.2%')(v) : (el.classList.contains('ib-big') ? big(v) : fmt2(v)));
+    fillMarks('base_split_share', null, (f, v) => v == null ? '—' : pct(v));
+    fillMarks('supply_change', null, (f, v) => f === 'pct' ? pct(v) : fmt2(v));
+    fillMarks('executor_summary', null, (f, v) => f === 'bridges' ? d3.format(',')(v) : dayFmt(v));
+    fillMarks('burn_eta', null, (f, v) => v == null ? '—'
+      : f === 'years_left' ? `≈ ${d3.format(',.0f')(v)} years`
+      : f === 'eta_date' ? d3.utcFormat('%B %Y')(new Date(v + 'T00:00:00Z'))
+      : f === 'remaining' ? compact.format(v) : fmt2(v));
+    fillMarks('refresh_status', null, (f, v) => v == null || v === '' ? '—' : f.endsWith('_at') ? when(v) : String(v));
+    fillMarks('recent_burns', null, (f, v) => v == null ? '—' : f === 'change' ? d3.format('+.1%')(v) : fmt2(v));
+    const split = fillMarks('base_split', null, (f, v, el) => el.classList.contains('ib-big') ? big(Number(v)) : fmt2(Number(v)));
+    const sup = fillMarks('supply', null, (f, v, el) => f === 'as_of' ? when(v) : (el.classList.contains('ib-big') || el.closest('.ib-pie-legend')) ? big(Number(v)) : fmt2(Number(v)));
+    const b = fillMarks('burns', null, (f, v, el) => f === 'as_of' ? when(v) : big(Number(v)));
+    const bd = fillMarks('burn_breakdown', null, (f, v, el) => el.classList.contains('ib-big') ? big(Number(v)) : fmt2(Number(v)));
+    fillMarks('keeper_summary', null, (f, v) => v == null ? '—' : f === 'eth' ? d3.format(',.4f')(v) : f === 'imd' ? fmt2(v) : d3.format(',')(v));
+    fillMarks('burn_coin_summary', null, (f, v) => v == null ? '—' : f === 'imd' ? fmt2(v) : d3.format(',')(v));
+    fillMarks('supply_check', null, (f, v) => v == null ? '—' : fmt2(v));
+
+    // Base split stacked bar
+    const splitBox = root.querySelector('#base-split .ib-stack');
+    if (isFail(split.res.status)) { splitBox.replaceChildren(); failLine(splitBox); }
+    else stack(splitBox, split.rows.map((r, i) => ({ label: r.method, v: Number(r.amount), color: PAL[i] })));
+
+    // Supply stacked bar
+    const supBox = root.querySelector('#supply-stack');
+    const s0 = sup.rows[0];
+    if (isFail(sup.res.status)) { supBox.replaceChildren(); failLine(supBox); }
+    else if (s0) stack(supBox, [
+      { label: 'On Base (not bridged)', v: Number(s0.on_base), color: PAL[0] },
+      { label: 'Locked on Base, bridged to Ethereum & Robinhood', v: Number(s0.locked_for_bridges), color: PAL[1] }
+    ]);
+    else supBox.replaceChildren();
+
+    // Start vs now bars
+    const cmp = root.querySelector('.ib-compare');
+    cmp.replaceChildren();
+    if (isFail(sup.res.status)) failLine(cmp);
+    else if (s0) hbars(cmp, [
+      { label: 'Starting supply', v: Number(s0.starting_supply), color: PAL[2] },
+      { label: 'Supply now', v: Number(s0.supply_now), color: PAL[0] }
+    ], 24, 14, (d) => `${fmt2(d.v)} IMD`);
+
+    // Per-route bars
+    const box = root.querySelector('.ib-bars-routes');
+    box.replaceChildren();
+    if (isFail(bd.res.status)) failLine(box);
+    else if (bd.rows.length) {
+      const total = d3.sum(bd.rows, r => Number(r.total_burned));
+      hbars(box, bd.rows.map((r, i) => ({ label: r.route, v: Number(r.total_burned), color: i === 0 ? PAL[0] : i === 1 ? PAL[1] : PAL[2] })), 28, 18,
+        (d) => `${fmt2(d.v)} IMD burned (${pct(d.v / total)} of all)`);
+    }
+
+    // Burnkeepers, executor sources, launched tokens
+    barsFrom('.ib-bars-keepers', 'burnkeepers', r => r.label, r => Number(r.imd_sent_to_burn), 10, (d, r) => `${fmt2(d.v)} IMD in ${r.bridges} bridge${r.bridges == 1 ? '' : 's'}`);
+    barsFrom('.ib-bars-sources', 'executor_sources', r => r.source, r => Number(r.imd_sent), 12, (d, r) => `${fmt2(d.v)} IMD in ${r.transfers} transfer${r.transfers == 1 ? '' : 's'} (${r.kind})`);
+    barsFrom('.ib-bars-coins', 'burn_coins', r => `${r.name} (${r.symbol})`, r => Number(r.imd_to_burn), 10, (d, r) => `${fmt2(d.v)} IMD · ${r.type}`);
+
+    // Executor running total line
+    const lineBox = root.querySelector('.ib-line');
+    lineBox.replaceChildren();
+    const cum = dash.data('executor_cumulative');
+    if (isFail(cum.status) || isFail(dash.data('executor_bridges').status)) failLine(lineBox);
+    else if (cum.status === 'ok' && cum.data && cum.data.length) line(lineBox, cum.data.map(r => ({ d: new Date(r.day + 'T00:00:00Z'), v: Number(r.cumulative), a: Number(r.amount) })));
+
+    // Tables
+    table('#breakdown-table', bd, 'route', r => [
+      { text: r.route, sub: r.how }, { text: fmt2(Number(r.burn_function)), cls: 'num' },
+      { text: fmt2(Number(r.burn_wallets)), cls: 'num' }, { text: fmt2(Number(r.total_burned)), cls: 'num' }]);
+    table('#supply-table', b, 'chain', r => [
+      { text: r.chain, sub: r.token }, { text: fmt2(Number(r.circulating_on_chain)), cls: 'num' },
+      { text: fmt2(Number(r.current_supply)), cls: 'num ib-hide' }, { text: fmt2(Number(r.locked_in_bridge)), cls: 'num ib-hide' },
+      { text: d3.format(',')(Number(r.block)), cls: 'num ib-hide' }, { text: r.contract, cls: 'mono ib-hide' }]);
+    const kp = dash.data('burnkeepers');
+    table('#keepers-table', { res: kp, rows: kp.status === 'ok' ? kp.data : [] }, 'keeper', r => [
+      { text: r.ens || r.keeper, sub: r.ens ? r.keeper : '', cls: r.ens ? '' : 'mono' }, { text: d3.format(',')(Number(r.bridges)), cls: 'num' },
+      { text: fmt2(Number(r.imd_sent_to_burn)), cls: 'num' }, { text: d3.format(',.5f')(Number(r.eth_spent)), cls: 'num ib-hide' },
+      { text: dayFmt(r.last_day), cls: 'ib-hide' }]);
+    drawCoins();
+
+    drawHistory();
+    drawPie(a.rows[0], sup.rows[0], isFail(a.res.status) || isFail(sup.res.status));
+  });
+
+  // The imd.fun mark (square frame + diamond) as the supply gauge: the square is the full 10M starting
+  // supply and fills from the bottom with burned IMD, its height exactly the burned share. The burn line
+  // is a zigzag "flame edge" whose teeth cancel out, so the area stays exact. Where the diamond dips
+  // into the burned part it is drawn inverted, so the logo stays whole.
+  let pieAnimated = false;
+  function drawPie(agg, s0, failed) {
+    const box = root.querySelector('.ib-pie');
+    box.replaceChildren();
+    if (failed) { failLine(box); return; }
+    if (!agg || !s0) return;
+    const full = Number(s0.starting_supply), burned = Number(agg.total_burned);
+    const share = Math.max(0, Math.min(1, burned / full));
+    const X0 = 3, X1 = 29, Y0 = 3, Y1 = 29, H = Y1 - Y0;          // inside of the logo's frame (viewBox 32)
+    const lvl = Y1 - H * share;
+    const teeth = 8, amp = Math.min(0.7, H * share / 2, H * (1 - share) / 2);
+    let edge = `M${X0},${Y1} L${X0},${lvl}`;
+    for (let i = 0; i < teeth; i++) {
+      const xa = X0 + (X1 - X0) * (i + 0.5) / teeth, xb = X0 + (X1 - X0) * (i + 1) / teeth;
+      edge += ` L${xa.toFixed(3)},${(lvl - amp).toFixed(3)} L${xb.toFixed(3)},${lvl.toFixed(3)}`;
+    }
+    edge += ` L${X1},${Y1} Z`;
+    const diamond = 'M16 8.5 L23.5 16 L16 23.5 L8.5 16 Z';
+    const uid = 'ibp' + Math.random().toString(36).slice(2, 8);
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', '0 0 32 32').attr('role', 'img')
+      .attr('aria-label', `imd.fun logo filled ${d3.format('.1%')(share)} with burned IMD, out of the ${big(full)} starting supply`);
+    svg.append('clipPath').attr('id', uid).append('path').attr('d', edge);
+    // not burned: the logo's open square
+    svg.append('rect').attr('class', 'ib-logo-left').attr('x', X0).attr('y', Y0).attr('width', X1 - X0).attr('height', H)
+      .style('fill', 'var(--ib-pie-left)');
+    svg.append('path').attr('d', diamond).attr('fill', 'none').attr('stroke', 'var(--ib-paper)').attr('stroke-width', 2.6)
+      .attr('stroke-linejoin', 'miter').style('pointer-events', 'none');
+    // burned: rising ash with a flame edge, the diamond inverted inside it
+    const burn = svg.append('g').attr('class', 'ib-logo-burn');
+    burn.append('path').attr('d', edge).style('fill', 'var(--ib-pie-burn)');
+    burn.append('path').attr('d', diamond).attr('clip-path', `url(#${uid})`).attr('fill', 'none')
+      .attr('stroke', 'var(--ib-ink)').attr('stroke-width', 2.6).attr('stroke-linejoin', 'miter').style('pointer-events', 'none');
+    if (H * share > 4.2) {
+      burn.append('text').text(d3.format('.1%')(share)).attr('x', X0 + 1.4).attr('y', Y1 - 1.5)
+        .style('font-size', '3.4px').style('font-weight', 600).style('letter-spacing', '-0.02em').attr('fill', 'var(--ib-ink)')
+        .style('pointer-events', 'none');
+    }
+    // the logo's frame on top
+    svg.append('rect').attr('x', 1.5).attr('y', 1.5).attr('width', 29).attr('height', 29).attr('fill', 'none')
+      .attr('stroke', 'var(--ib-paper)').attr('stroke-width', 3).style('pointer-events', 'none');
+    if (!pieAnimated) { burn.classed('ib-rise', true); pieAnimated = true; }
+    // hover
+    const tip = tooltipFor(box);
+    const parts = [
+      { sel: '.ib-logo-left', label: 'Not burned', v: Math.max(0, full - burned) },
+      { sel: '.ib-logo-burn', label: 'Burned', v: burned }
+    ];
+    parts.forEach(p => svg.select(p.sel)
+      .on('mousemove', (ev) => showTip(tip, box, ev, p.label, `${fmt2(p.v)} IMD (${d3.format('.2%')(p.v / full)} of ${big(full)})`))
+      .on('mouseleave', () => { tip.style.display = 'none'; }));
+  }
+
+  function windowStart(lastDay) {
+    if (range === 'all') return null;
+    const d = new Date(lastDay + 'T00:00:00Z');
+    return d3.utcDay.offset(d, -Number(range)).toISOString().slice(0, 10);
+  }
+
+  function drawHistory() {
+    const areaBox = root.querySelector('.ib-area');
+    const monthBox = root.querySelector('.ib-months');
+    areaBox.replaceChildren(); monthBox.replaceChildren();
+    const hs = dash.data('history_series');
+    const failed = isFail(dash.data('burn_history').status) || isFail(dash.data('executor_bridges').status) || isFail(hs.status);
+    if (failed) { failLine(areaBox); failLine(monthBox); return; }
+    if (hs.status !== 'ok' || !hs.data || !hs.data.length) return;
+    const all = hs.data;
+    const start = windowStart(all[all.length - 1].day);
+    // base row: the day before the window (or zero for "all")
+    let baseRow = { base_native: 0, base_executor: 0, other_chains: 0 };
+    let rows = all;
+    if (start) {
+      const i = all.findIndex(r => r.day >= start);
+      if (i > 0) baseRow = all[i - 1];
+      rows = all.slice(Math.max(0, i));
+    }
+    const pts = rows.map(r => {
+      const p = { d: new Date(r.day + 'T00:00:00Z'), day: r.day };
+      SERIES.forEach(s => { p[s.key] = Number(r[s.key]) - Number(baseRow[s.key]); });
+      p.total = SERIES.reduce((t, s) => t + p[s.key], 0);
+      return p;
+    });
+    areaChart(areaBox, pts, start);
+    const mb = dash.data('monthly_burns');
+    if (mb.status === 'ok' && mb.data) {
+      const months = start ? mb.data.filter(m => m.month >= start.slice(0, 7)) : mb.data;
+      monthBars(monthBox, months.map(m => ({ ...m, d: new Date(m.month + '-01T00:00:00Z') })));
+    }
+  }
+
+  function yAxis(svg, y, ticks, m, W, H) {
+    ticks.forEach(t => {
+      svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(t)).attr('y2', y(t)).attr('stroke', 'var(--ib-soft)');
+      svg.append('text').text(compact.format(t)).attr('x', m.l - 8).attr('y', y(t)).attr('dy', '0.35em').attr('text-anchor', 'end')
+        .attr('fill', 'var(--ib-dim)').style('font-size', '11px').style('font-variant-numeric', 'tabular-nums');
+    });
+    svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', H - m.b).attr('y2', H - m.b).attr('stroke', 'var(--ib-ink)');
+  }
+
+  function measure(svg, texts) {
+    const probe = svg.append('g').style('font-size', '11px').style('font-variant-numeric', 'tabular-nums');
+    const w = d3.max(texts, t => probe.append('text').text(t).node().getComputedTextLength()) || 0;
+    probe.remove();
+    return w;
+  }
+
+  function tipRows(tip, box, ev, key, lines) {
+    tip.replaceChildren();
+    const k = document.createElement('div'); k.className = 'k'; k.textContent = key; tip.append(k);
+    lines.forEach(l => {
+      const row = document.createElement('div'); row.style.display = 'flex'; row.style.alignItems = 'center'; row.style.gap = '6px';
+      if (l.color) { const sw = document.createElement('span'); sw.className = 'ib-sw'; sw.style.background = l.color; row.append(sw); }
+      const t = document.createElement('span'); t.textContent = l.text; row.append(t);
+      tip.append(row);
+    });
+    tip.style.display = 'block';
+    const [mx, my] = d3.pointer(ev, box);
+    const left = mx + 14 + tip.offsetWidth > box.clientWidth ? mx - 14 - tip.offsetWidth : mx + 14;
+    tip.style.left = Math.max(0, left) + 'px';
+    tip.style.top = Math.max(0, my - tip.offsetHeight / 2) + 'px';
+  }
+
+  function areaChart(box, pts, start) {
+    const W = box.clientWidth || 600, H = 280;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img')
+      .attr('aria-label', start ? 'IMD burned since the start of the selected range' : 'IMD burned since launch');
+    const y = d3.scaleLinear([0, d3.max(pts, p => p.total) || 1], [H - 24, 10]).nice();
+    const ticks = y.ticks(5);
+    const xFmt = (Number(range) <= 90) ? d3.utcFormat('%b %-d') : d3.utcFormat('%b %Y');
+    const ylw = measure(svg, ticks.map(t => compact.format(t))) + 8;
+    const xlw = measure(svg, [xFmt(new Date(Date.UTC(2026, 8, 30)))]);
+    const m = { l: ylw, r: Math.ceil(xlw / 2) + 4, b: 24 };
+    const x = d3.scaleUtc(d3.extent(pts, p => p.d), [m.l, W - m.r]);
+    yAxis(svg, y, ticks, m, W, H);
+    const nX = Math.max(2, Math.min(7, Math.floor((W - m.l - m.r) / (xlw + 28))));
+    x.ticks(nX).forEach(t => svg.append('text').text(xFmt(t)).attr('x', x(t)).attr('y', H - 6).attr('text-anchor', 'middle')
+      .attr('fill', 'var(--ib-dim)').style('font-size', '11px'));
+    const stacked = d3.stack().keys(SERIES.map(s => s.key)).value((p, k) => Math.max(0, p[k]))(pts);
+    svg.append('g').selectAll('path').data(stacked).join('path')
+      .attr('fill', (d, i) => PAL[SERIES[i].ci])
+      .attr('d', d3.area().x(d => x(d.data.d)).y0(d => y(d[0])).y1(d => y(d[1])).curve(d3.curveLinear));
+    svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'var(--ib-ink)').attr('stroke-width', 1.5)
+      .attr('d', d3.line().x(p => x(p.d)).y(p => y(p.total)));
+    const rule = svg.append('line').attr('y1', 10).attr('y2', H - m.b).attr('stroke', 'var(--ib-ink)').style('display', 'none');
+    const dot = svg.append('rect').attr('width', 7).attr('height', 7).attr('fill', 'var(--ib-ink)').style('display', 'none');
+    const tip = tooltipFor(box);
+    const bis = d3.bisector(p => p.d).center;
+    const since = start ? ` since ${dayFmt(pts[0].day)}` : '';
+    svg.append('rect').attr('x', m.l).attr('y', 0).attr('width', Math.max(0, W - m.l - m.r)).attr('height', H).attr('fill', 'transparent')
+      .on('mousemove', (ev) => {
+        const [mx] = d3.pointer(ev);
+        const p = pts[bis(pts, x.invert(mx))];
+        rule.style('display', null).attr('x1', x(p.d)).attr('x2', x(p.d));
+        dot.style('display', null).attr('x', x(p.d) - 3.5).attr('y', y(p.total) - 3.5);
+        tipRows(tip, box, ev, dayFmt(p.day), [
+          { text: `${fmt2(p.total)} IMD burned${since}` },
+          ...SERIES.map(s => ({ color: PAL[s.ci], text: `${s.label}: ${fmt2(p[s.key])}` }))
+        ]);
+      })
+      .on('mouseleave', () => { rule.style('display', 'none'); dot.style('display', 'none'); tip.style.display = 'none'; });
+  }
+
+  function monthBars(box, months) {
+    if (!months.length) return;
+    const W = box.clientWidth || 600, H = 220;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img')
+      .attr('aria-label', 'IMD burned per month');
+    const y = d3.scaleLinear([0, d3.max(months, r => SERIES.reduce((t, s) => t + Math.max(0, Number(r[s.key])), 0)) || 1], [H - 24, 10]).nice();
+    const ticks = y.ticks(4);
+    const ylw = measure(svg, ticks.map(t => compact.format(t))) + 8;
+    const lab = d3.utcFormat("%b '%y");
+    const xlw = measure(svg, ["Sep '26"]);
+    const m = { l: ylw, r: Math.ceil(xlw / 2) + 2, b: 24 };
+    const x = d3.scaleBand(months.map(r => r.month), [m.l, W - m.r]).padding(0.2);
+    yAxis(svg, y, ticks, m, W, H);
+    const every = Math.max(1, Math.ceil(months.length / Math.max(1, Math.floor((W - m.l - m.r) / (xlw + 16)))));
+    months.forEach((r, i) => { if (i % every === 0) svg.append('text').text(lab(r.d)).attr('x', x(r.month) + x.bandwidth() / 2).attr('y', H - 6)
+      .attr('text-anchor', 'middle').attr('fill', 'var(--ib-dim)').style('font-size', '11px'); });
+    const stacked = d3.stack().keys(SERIES.map(s => s.key)).value((r, k) => Math.max(0, Number(r[k])))(months);
+    const bw = Math.min(32, x.bandwidth());
+    const off = (x.bandwidth() - bw) / 2;
+    svg.append('g').selectAll('g').data(stacked).join('g').attr('fill', (d, i) => PAL[SERIES[i].ci])
+      .selectAll('rect').data(d => d).join('rect')
+      .attr('x', d => x(d.data.month) + off).attr('width', bw)
+      .attr('y', d => y(d[1])).attr('height', d => Math.max(0, y(d[0]) - y(d[1])));
+    const tip = tooltipFor(box);
+    svg.append('g').selectAll('rect').data(months).join('rect')
+      .attr('x', r => x(r.month)).attr('width', x.bandwidth()).attr('y', 0).attr('height', H - m.b).attr('fill', 'transparent')
+      .on('mousemove', (ev, r) => tipRows(tip, box, ev, d3.utcFormat('%B %Y')(r.d), [
+        { text: `${fmt2(Number(r.total))} IMD burned` },
+        ...SERIES.map(s => ({ color: PAL[s.ci], text: `${s.label}: ${fmt2(Number(r[s.key]))}` }))
+      ]))
+      .on('mouseleave', () => { tip.style.display = 'none'; });
+  }
+
+  function barsFrom(sel, id, labelOf, valueOf, n, tipOf) {
+    const box = root.querySelector(sel);
+    box.replaceChildren();
+    const res = dash.data(id);
+    if (isFail(res.status)) { failLine(box); return; }
+    if (res.status !== 'ok' || !res.data || !res.data.length) return;
+    const rows = res.data.slice().sort((x, y) => valueOf(y) - valueOf(x)).slice(0, n).filter(r => valueOf(r) > 0);
+    hbars(box, rows.map((r, i) => ({ label: short(labelOf(r)), full: labelOf(r), v: valueOf(r), color: i === 0 ? PAL[0] : PAL[1], row: r })), 22, 10,
+      (d) => tipOf(d, d.row));
+  }
+
+  function table(sel, src, key, cellsOf, filter) {
+    const tb = root.querySelector(sel + ' tbody');
+    tb.replaceChildren();
+    if (isFail(src.res.status)) {
+      const tr = document.createElement('tr'); const td = document.createElement('td');
+      td.colSpan = root.querySelectorAll(sel + ' th').length; failLine(td); tr.append(td); tb.append(tr); return;
+    }
+    (filter ? src.rows.filter(filter) : src.rows).forEach(r => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r[key]);
+      cellsOf(r).forEach(c => {
+        const td = document.createElement('td'); if (c.cls) td.className = c.cls; td.textContent = c.text == null ? '—' : c.text;
+        if (c.sub) { const t = document.createElement('span'); t.className = 'tok'; t.textContent = c.sub; td.append(t); }
+        tr.append(td);
+      });
+      tb.append(tr);
+    });
+  }
+
+  function drawCoins() {
+    const res = dash.data('burn_coins');
+    const q = coinSearch.value.trim().toLowerCase();
+    table('#coins-table', { res, rows: res.status === 'ok' ? res.data : [] }, 'address', r => [
+      { text: d3.format(',')(Number(r.rank)), cls: 'num' }, { text: r.name, sub: r.symbol },
+      { text: r.type, sub: r.burn_feature, cls: 'ib-hide' }, { text: fmt2(Number(r.imd_to_burn)), cls: 'num' },
+      { text: r.trades == null ? '—' : d3.format(',')(Number(r.trades)), cls: 'num ib-hide' },
+      { text: r.volume_eth == null ? '—' : d3.format(',.3f')(Number(r.volume_eth)), cls: 'num ib-hide' },
+      { text: r.launched ? dayFmt(r.launched) : '—', cls: 'ib-hide' }, { text: r.address.slice(0, 6) + '…' + r.address.slice(-4), cls: 'mono ib-hide' }],
+      q ? (r => [r.name, r.symbol, r.address, r.type].join(' ').toLowerCase().includes(q)) : null);
+  }
+
+  function hbars(box, rows, barH, gap, tipLine) {
+    const W = box.clientWidth || 600, top = 2;
+    const H = top + rows.length * (barH + gap) - gap + 4;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img');
+    const probe = svg.append('g').style('font-size', '11px').style('font-variant-numeric', 'tabular-nums');
+    const lw = d3.max(rows, r => probe.append('text').text(r.label).node().getComputedTextLength()) + 12;
+    const vw = d3.max(rows, r => probe.append('text').text(fmt2(r.v)).node().getComputedTextLength()) + 20;
+    probe.remove();
+    const x = d3.scaleLinear([0, d3.max(rows, r => r.v) || 1], [0, Math.max(40, W - lw - vw)]);
+    const g = svg.selectAll('g.row').data(rows).join('g').attr('class', 'row')
+      .attr('transform', (d, i) => `translate(0, ${top + i * (barH + gap)})`);
+    g.append('text').text(d => d.label).attr('x', 0).attr('y', barH / 2).attr('dy', '0.35em')
+      .attr('fill', 'var(--ib-ink)').style('font-size', '11px');
+    g.append('rect').attr('x', lw).attr('y', 0).attr('height', barH)
+      .attr('width', d => Math.max(2, x(d.v))).attr('fill', d => d.color);
+    g.append('text').text(d => fmt2(d.v)).attr('x', d => lw + Math.max(2, x(d.v)) + 6)
+      .attr('y', barH / 2).attr('dy', '0.35em').attr('fill', 'var(--ib-dim)')
+      .style('font-size', '11px').style('font-variant-numeric', 'tabular-nums');
+    const tip = tooltipFor(box);
+    g.on('mousemove', (ev, d) => { showTip(tip, box, ev, d.full || d.label, tipLine(d)); d3.select(ev.currentTarget).select('rect').attr('opacity', .8); })
+     .on('mouseleave', (ev) => { tip.style.display = 'none'; d3.select(ev.currentTarget).select('rect').attr('opacity', 1); });
+  }
+
+  function line(box, pts) {
+    const W = box.clientWidth || 600, H = 220;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img')
+      .attr('aria-label', 'Running total of IMD burned via the BurnExecutor');
+    const y = d3.scaleLinear([0, d3.max(pts, p => p.v) || 1], [H - 24, 10]).nice();
+    const yTicks = y.ticks(4);
+    const probe = svg.append('g').style('font-size', '11px').style('font-variant-numeric', 'tabular-nums');
+    const ylw = d3.max(yTicks, t => probe.append('text').text(compact.format(t)).node().getComputedTextLength()) + 8;
+    const xlw = probe.append('text').text('May 2026').node().getComputedTextLength();
+    probe.remove();
+    const m = { l: ylw, r: Math.ceil(xlw / 2) + 4 };
+    const x = d3.scaleUtc(d3.extent(pts, p => p.d), [m.l, W - m.r]);
+    const nX = Math.max(2, Math.min(6, Math.floor((W - m.l - m.r) / (xlw + 24))));
+    const gy = svg.append('g');
+    yTicks.forEach(t => {
+      gy.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(t)).attr('y2', y(t)).attr('stroke', 'var(--ib-soft)');
+      gy.append('text').text(compact.format(t)).attr('x', m.l - 8).attr('y', y(t)).attr('dy', '0.35em').attr('text-anchor', 'end')
+        .attr('fill', 'var(--ib-dim)').style('font-size', '11px').style('font-variant-numeric', 'tabular-nums');
+    });
+    svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', H - 24).attr('y2', H - 24).attr('stroke', 'var(--ib-ink)');
+    x.ticks(nX).forEach(t => {
+      svg.append('text').text(d3.utcFormat('%b %Y')(t)).attr('x', x(t)).attr('y', H - 6).attr('text-anchor', 'middle')
+        .attr('fill', 'var(--ib-dim)').style('font-size', '11px');
+    });
+    svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', PAL[0]).attr('stroke-width', 2)
+      .attr('stroke-linejoin', 'miter').attr('stroke-linecap', 'square')
+      .attr('d', d3.line().x(p => x(p.d)).y(p => y(p.v)).curve(d3.curveLinear));
+    const dot = svg.append('rect').attr('width', 7).attr('height', 7).attr('fill', PAL[0]).style('display', 'none');
+    const tip = tooltipFor(box);
+    const bis = d3.bisector(p => p.d).center;
+    svg.append('rect').attr('x', m.l).attr('y', 0).attr('width', Math.max(0, W - m.l - m.r)).attr('height', H).attr('fill', 'transparent')
+      .on('mousemove', (ev) => {
+        const [mx] = d3.pointer(ev);
+        const p = pts[bis(pts, x.invert(mx))];
+        dot.style('display', null).attr('x', x(p.d) - 3.5).attr('y', y(p.v) - 3.5);
+        showTip(tip, box, ev, d3.utcFormat('%b %-d, %Y')(p.d), `${fmt2(p.a)} IMD that day · ${fmt2(p.v)} total`);
+      })
+      .on('mouseleave', () => { dot.style('display', 'none'); tip.style.display = 'none'; });
+  }
+})();
+</script>
+
+</div>
+</body>
+</html>

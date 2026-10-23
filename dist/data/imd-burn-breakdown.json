@@ -1,0 +1,34 @@
+[
+ {
+  "route": "Base \u00b7 Fren Pet native",
+  "chain": "Base",
+  "burn_function": 2750763.077972,
+  "burn_wallets": 45.377364,
+  "total_burned": 2750808.455336,
+  "how": "burn() on the Base token (Fren Pet) by anyone except the BurnExecutor's receiver, plus Base burn wallets"
+ },
+ {
+  "route": "Base \u00b7 via BurnExecutor",
+  "chain": "Base",
+  "burn_function": 157311.968794,
+  "burn_wallets": 0.0,
+  "total_burned": 157311.968794,
+  "how": "IMD collected by the Ethereum BurnExecutors, bridged to the Base burn receiver and burned there"
+ },
+ {
+  "route": "Ethereum",
+  "chain": "Ethereum",
+  "burn_function": 0.0,
+  "burn_wallets": 875.303082,
+  "total_burned": 875.303082,
+  "how": "IMD sent to burn wallets on Ethereum"
+ },
+ {
+  "route": "Robinhood Chain",
+  "chain": "Robinhood Chain",
+  "burn_function": 0.0,
+  "burn_wallets": 32.435118,
+  "total_burned": 32.435118,
+  "how": "IMD sent to burn wallets on Robinhood Chain"
+ }
+]

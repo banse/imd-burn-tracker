@@ -1,0 +1,92 @@
+[
+ {
+  "source": "frenpet.eth",
+  "kind": "wallet",
+  "address": "0xe764da9bdea91d845aac2c7d53a8dfe59a369095",
+  "imd_sent": 115034.394019,
+  "transfers": 10,
+  "first_day": "2026-05-16",
+  "last_day": "2026-09-21"
+ },
+ {
+  "source": "IMD/ETH pool burn hook & other Uniswap v4 swaps",
+  "kind": "pool hook",
+  "address": "0xc6c965bd164c483e87d0b550671798e9a3602840",
+  "imd_sent": 35288.431478,
+  "transfers": 332,
+  "first_day": "2026-09-02",
+  "last_day": "2026-10-21"
+ },
+ {
+  "source": "Community coins (LaunchpadHook)",
+  "kind": "community coins",
+  "address": "0x51768f5da32ba2008304cc81674da51acb802888",
+  "imd_sent": 3977.198731,
+  "transfers": 110,
+  "first_day": "2026-08-19",
+  "last_day": "2026-10-16"
+ },
+ {
+  "source": "surfsurf.eth",
+  "kind": "wallet",
+  "address": "0x047f606fd5b2baa5f5c6c4ab8958e45cb6b054b7",
+  "imd_sent": 2277.0,
+  "transfers": 9,
+  "first_day": "2026-05-15",
+  "last_day": "2026-10-18"
+ },
+ {
+  "source": "0x3f25\u20261f22",
+  "kind": "wallet",
+  "address": "0x3f252e859a277a86a3967c11d4e054b2f07a1f22",
+  "imd_sent": 876.264652,
+  "transfers": 23,
+  "first_day": "2026-10-05",
+  "last_day": "2026-10-21"
+ },
+ {
+  "source": "FeeRouter",
+  "kind": "contract",
+  "address": "0x59b28f1f9680394d129adb10f2f19d4b1f1f2693",
+  "imd_sent": 6.299768,
+  "transfers": 1,
+  "first_day": "2026-10-21",
+  "last_day": "2026-10-21"
+ },
+ {
+  "source": "NIGHT WATCHERS (WATCH) #2437",
+  "kind": "swarm launch",
+  "address": "0xbdff33cffc3f617f808a6de012a2574dbf69d819",
+  "imd_sent": 2.0,
+  "transfers": 2,
+  "first_day": "2026-10-22",
+  "last_day": "2026-10-22"
+ },
+ {
+  "source": "0x3322\u20264d69",
+  "kind": "contract",
+  "address": "0x3322e6dd06ade8377f1f1bcb766f6133d7b64d69",
+  "imd_sent": 1.0,
+  "transfers": 1,
+  "first_day": "2026-10-22",
+  "last_day": "2026-10-22"
+ },
+ {
+  "source": "IMD Names (contract)",
+  "kind": "contract",
+  "address": "0x690084d1331f7a6509eed32e7d34ffacb377d807",
+  "imd_sent": 0.926202,
+  "transfers": 4,
+  "first_day": "2026-10-14",
+  "last_day": "2026-10-17"
+ },
+ {
+  "source": "Sworn (SWORN) #2404",
+  "kind": "swarm launch",
+  "address": "0x0da2679000ea5380d1361cc3cca7d4e8c881f766",
+  "imd_sent": 0.7,
+  "transfers": 7,
+  "first_day": "2026-10-21",
+  "last_day": "2026-10-22"
+ }
+]

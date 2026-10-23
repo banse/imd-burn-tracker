@@ -1,0 +1,713 @@
+[
+ {
+  "bridged_at": "2026-05-15T21:29:47Z",
+  "day": "2026-05-15",
+  "executor": "0x2ec59bed2fb9dee447bbec6e3bca249782c9b88b",
+  "base_receiver": "0x4b118f0c63d09f09cb35fc6e8024a6c96493eada",
+  "amount": 1.0,
+  "eth_block": 25103251,
+  "tx": "0xfcf0b062878894408e273f4ffe4358c73ff59c830373d414fc0abce96ea018b4"
+ },
+ {
+  "bridged_at": "2026-05-15T21:47:47Z",
+  "day": "2026-05-15",
+  "executor": "0x2ec59bed2fb9dee447bbec6e3bca249782c9b88b",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1.0,
+  "eth_block": 25103341,
+  "tx": "0x9e9944330fcef445f359d12edc41872198d91f2df7c6bb274f1fa7e7f4073662"
+ },
+ {
+  "bridged_at": "2026-05-15T21:55:47Z",
+  "day": "2026-05-15",
+  "executor": "0x2ec59bed2fb9dee447bbec6e3bca249782c9b88b",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 10.0,
+  "eth_block": 25103380,
+  "tx": "0x89ba4966f99693bc558f9eb39e22bee39a3dc2cb35728f7c44974b4fd367a644"
+ },
+ {
+  "bridged_at": "2026-05-16T16:41:35Z",
+  "day": "2026-05-16",
+  "executor": "0x2ec59bed2fb9dee447bbec6e3bca249782c9b88b",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 12039.394018,
+  "eth_block": 25108993,
+  "tx": "0xb4201e07a90e9050a28194b5caec343861ed28cf3e40ad32a63f409e22fb8454"
+ },
+ {
+  "bridged_at": "2026-07-31T02:31:59Z",
+  "day": "2026-07-31",
+  "executor": "0x2ec59bed2fb9dee447bbec6e3bca249782c9b88b",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 31064.0,
+  "eth_block": 25649867,
+  "tx": "0x9d40467da835024f14a61b9c63b6b718dd5a40d187e5f304eb35880a2ca6fedd"
+ },
+ {
+  "bridged_at": "2026-08-05T04:15:11Z",
+  "day": "2026-08-05",
+  "executor": "0x2ec59bed2fb9dee447bbec6e3bca249782c9b88b",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 15745.0,
+  "eth_block": 25686271,
+  "tx": "0xcfb8f6e2c733742615519cfc5596a6524daabb1efe0e628ee10da5b00f24964c"
+ },
+ {
+  "bridged_at": "2026-08-12T02:13:11Z",
+  "day": "2026-08-12",
+  "executor": "0x2ec59bed2fb9dee447bbec6e3bca249782c9b88b",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 11692.0,
+  "eth_block": 25735861,
+  "tx": "0x766080e40f7db3ec1f928aedd4f6a21d3bc89279d28580b313c4658865f1e28e"
+ },
+ {
+  "bridged_at": "2026-08-20T02:01:35Z",
+  "day": "2026-08-20",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 3230.0,
+  "eth_block": 25793208,
+  "tx": "0x09de6df981de71f76ef334661c227f240c8d00fb480b59a03b5903b35a4774aa"
+ },
+ {
+  "bridged_at": "2026-08-20T02:25:47Z",
+  "day": "2026-08-20",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 12440.787926,
+  "eth_block": 25793329,
+  "tx": "0xd3c906026d2407b34f0d6245497d65e35e6171a84262ebef3a4c001888ed14e6"
+ },
+ {
+  "bridged_at": "2026-08-20T14:40:11Z",
+  "day": "2026-08-20",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 31.23838,
+  "eth_block": 25796987,
+  "tx": "0x66e21691b2ba0ebed25c3c89e0dae4f4d6c7a8ded992607a996491241bb03481"
+ },
+ {
+  "bridged_at": "2026-08-22T15:08:47Z",
+  "day": "2026-08-22",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 23.280267,
+  "eth_block": 25811484,
+  "tx": "0xb408c6d9d58bd2fb3cb7dbc42d6ce74119175d2e0ff7a795472f09fd75f1e90e"
+ },
+ {
+  "bridged_at": "2026-08-24T22:32:59Z",
+  "day": "2026-08-24",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 29.979176,
+  "eth_block": 25828050,
+  "tx": "0xe4a999369d036a9164b643e9b4e99ea9f299d79f84d3a49f38aae951685b4a36"
+ },
+ {
+  "bridged_at": "2026-08-27T04:45:47Z",
+  "day": "2026-08-27",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 8788.251215,
+  "eth_block": 25844256,
+  "tx": "0xb4b246abb48fb7dab5d931f2cb03ae7d91bc979f63a5a210185e5f9ee7f867fd"
+ },
+ {
+  "bridged_at": "2026-08-29T17:38:59Z",
+  "day": "2026-08-29",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1.237986,
+  "eth_block": 25862457,
+  "tx": "0xb994c9801f591839f56ed66d035405410f4fd4d6e6b347194d3d7b670c29232f"
+ },
+ {
+  "bridged_at": "2026-09-01T23:17:23Z",
+  "day": "2026-09-01",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 31.425603,
+  "eth_block": 25885667,
+  "tx": "0xb9397c659a4fdbe40ee772d9271a5a838b982a6668d32eec7534f0d3a90ad6c4"
+ },
+ {
+  "bridged_at": "2026-09-02T09:14:23Z",
+  "day": "2026-09-02",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 59.480713,
+  "eth_block": 25888643,
+  "tx": "0x82244ad09638c2b69c130e9074e3e54d706e9c0be1937d1a899d70f1d368b6f0"
+ },
+ {
+  "bridged_at": "2026-09-02T11:30:47Z",
+  "day": "2026-09-02",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 21.484236,
+  "eth_block": 25889320,
+  "tx": "0x48bd337090d44eeb646ddac256109792af86849366322871d70f8efd286a206e"
+ },
+ {
+  "bridged_at": "2026-09-02T11:56:11Z",
+  "day": "2026-09-02",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 160.255699,
+  "eth_block": 25889447,
+  "tx": "0x38f2e81768cb8694de5df10956b3fae39e83d80e33367529e2bdbcb53721723b"
+ },
+ {
+  "bridged_at": "2026-09-02T18:53:59Z",
+  "day": "2026-09-02",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 33.191611,
+  "eth_block": 25891530,
+  "tx": "0xf1177c9b49b84da2ef83dacb7a3a6b351c9d53d3a013a543586e4fb8c1fa874b"
+ },
+ {
+  "bridged_at": "2026-09-02T20:26:59Z",
+  "day": "2026-09-02",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 204.904403,
+  "eth_block": 25891995,
+  "tx": "0x86647cfe6732580f2505999dc4c32ecaa2c4ca9c58b15b7907d8b723c76c08be"
+ },
+ {
+  "bridged_at": "2026-09-02T22:33:35Z",
+  "day": "2026-09-02",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 617.098686,
+  "eth_block": 25892621,
+  "tx": "0xac528e10a5e1ace49704fbc1cd2147579c83ba8e8f3deacf9fb6b0eb33b88fd9"
+ },
+ {
+  "bridged_at": "2026-09-02T23:18:35Z",
+  "day": "2026-09-02",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 216.163855,
+  "eth_block": 25892846,
+  "tx": "0x3fcbbe18d40e77a4cb0ee29c8453b3152903699bb18ed50c6860bf5d6b26e9e4"
+ },
+ {
+  "bridged_at": "2026-09-02T23:33:59Z",
+  "day": "2026-09-02",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 678.193374,
+  "eth_block": 25892923,
+  "tx": "0x377ddd5946da5847497a69f1ad7f53d594fc54a42606ae35abe65c84d2b542f1"
+ },
+ {
+  "bridged_at": "2026-09-03T01:06:47Z",
+  "day": "2026-09-03",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 47.60761,
+  "eth_block": 25893384,
+  "tx": "0x20bf66fbd2dbc8841b07b32628ba9d73f80bfd84ed059b84b4d29eaa83337e68"
+ },
+ {
+  "bridged_at": "2026-09-03T14:49:47Z",
+  "day": "2026-09-03",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 725.236155,
+  "eth_block": 25897485,
+  "tx": "0xed7f7e1dac92803d517891fc8e58977d215f3d09d0d3ff1538d4937ce040da5b"
+ },
+ {
+  "bridged_at": "2026-09-03T15:07:11Z",
+  "day": "2026-09-03",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 395.112454,
+  "eth_block": 25897572,
+  "tx": "0x94f17b19fba884ea71b57a738d023b67061473c95f509aa990e7714c4f8c539d"
+ },
+ {
+  "bridged_at": "2026-09-03T16:49:59Z",
+  "day": "2026-09-03",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1762.451287,
+  "eth_block": 25898085,
+  "tx": "0x4ae75153e06634d63da5d539c5e3780a2a52f758188a40579420ecf873cc0b01"
+ },
+ {
+  "bridged_at": "2026-09-03T17:40:35Z",
+  "day": "2026-09-03",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 10904.0,
+  "eth_block": 25898336,
+  "tx": "0x62785f4bbe2aa4b5a34d97d2e74c25133749070e9a40ee110fabf3deb0892ab3"
+ },
+ {
+  "bridged_at": "2026-09-03T18:52:23Z",
+  "day": "2026-09-03",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 33.380592,
+  "eth_block": 25898694,
+  "tx": "0x59e53ead017f965528d8d97217646230a53c8570fa93db521c94158c0278659e"
+ },
+ {
+  "bridged_at": "2026-09-04T01:47:11Z",
+  "day": "2026-09-04",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 781.0,
+  "eth_block": 25900761,
+  "tx": "0x8ae01a9f38c0b5c2f6567da89d3d7d6d741a83c9b550742a90610975e6c360b0"
+ },
+ {
+  "bridged_at": "2026-09-04T05:10:35Z",
+  "day": "2026-09-04",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 32.894574,
+  "eth_block": 25901770,
+  "tx": "0xd96bca3dbd3fb91fb1b871244fae52ba5e7461a322e366df5ce1c6a7269dab80"
+ },
+ {
+  "bridged_at": "2026-09-05T05:36:47Z",
+  "day": "2026-09-05",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 981.726147,
+  "eth_block": 25909081,
+  "tx": "0xce43b341c898eff33cb1c1e57685138e1d4dff270d04ce8ae648dcbf328c47de"
+ },
+ {
+  "bridged_at": "2026-09-05T08:19:35Z",
+  "day": "2026-09-05",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 515.90858,
+  "eth_block": 25909888,
+  "tx": "0xad84f790245c2fdde652db071be5b747638557c75dcc3bcdd1eea0a12ad1ab74"
+ },
+ {
+  "bridged_at": "2026-09-06T01:17:47Z",
+  "day": "2026-09-06",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 783.102558,
+  "eth_block": 25914960,
+  "tx": "0x41af9e5098d7f8358b26f320ccb14aac42787d27cfd79a3db7c4220423e79156"
+ },
+ {
+  "bridged_at": "2026-09-06T01:48:35Z",
+  "day": "2026-09-06",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1288.521044,
+  "eth_block": 25915113,
+  "tx": "0x7ae11f836dbd998b3238b213d9e79e4fa1067d32b8bf668ca406efda0939b726"
+ },
+ {
+  "bridged_at": "2026-09-06T03:10:11Z",
+  "day": "2026-09-06",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 712.93139,
+  "eth_block": 25915521,
+  "tx": "0xcaa4e5b703d9ed10c6c3a842b0307c7a2a20fceacfcf71e8b4fb9ef9c39556e5"
+ },
+ {
+  "bridged_at": "2026-09-06T06:44:35Z",
+  "day": "2026-09-06",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 685.863868,
+  "eth_block": 25916592,
+  "tx": "0xb2fd85c1f7aaba17f02561f27da6989fda1bb4780f29992b946a48f2f2cc5aeb"
+ },
+ {
+  "bridged_at": "2026-09-06T07:05:23Z",
+  "day": "2026-09-06",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 622.277215,
+  "eth_block": 25916695,
+  "tx": "0x737349cbdfa8028f0ed20dbfdde9260f44bd648c16809acd1b526e8f16c1d637"
+ },
+ {
+  "bridged_at": "2026-09-06T09:37:47Z",
+  "day": "2026-09-06",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1010.933905,
+  "eth_block": 25917454,
+  "tx": "0x3dbfec03be3512a416a21ab5beb0f64a0e5a0d8e1e49cf63ab703a21c1227c3e"
+ },
+ {
+  "bridged_at": "2026-09-06T11:03:47Z",
+  "day": "2026-09-06",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 225.939178,
+  "eth_block": 25917884,
+  "tx": "0x83072bb40868e2386fd6be0c66aadb148da95a4276df787c010101a5253cccd5"
+ },
+ {
+  "bridged_at": "2026-09-06T23:10:11Z",
+  "day": "2026-09-06",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 284.378959,
+  "eth_block": 25921504,
+  "tx": "0x95c712de39c948fa60eac208f1c9c4d7698c20648dd47abbda338cadd958280d"
+ },
+ {
+  "bridged_at": "2026-09-07T01:53:23Z",
+  "day": "2026-09-07",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 742.174487,
+  "eth_block": 25922319,
+  "tx": "0x2371918e83216820b0b95461ba15d18bd36c965f066d3e19db5ce6cdceffe6f1"
+ },
+ {
+  "bridged_at": "2026-09-07T04:15:35Z",
+  "day": "2026-09-07",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 547.690841,
+  "eth_block": 25923027,
+  "tx": "0xde2f3d5dcf54b7dd21a717f00612be899910f78403aa291b3f3fa4f5bcacca1d"
+ },
+ {
+  "bridged_at": "2026-09-07T06:07:59Z",
+  "day": "2026-09-07",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 566.397099,
+  "eth_block": 25923584,
+  "tx": "0xf58f7e98f07164750d147ee2d818c6ebf62c6dd1194fc935389ee857478e83ec"
+ },
+ {
+  "bridged_at": "2026-09-07T14:36:47Z",
+  "day": "2026-09-07",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 510.500395,
+  "eth_block": 25926115,
+  "tx": "0x0c466ead05ca3d5fa84434d4bb2c5b598b1908ddf4d11299c8f929b49a05922c"
+ },
+ {
+  "bridged_at": "2026-09-07T15:27:11Z",
+  "day": "2026-09-07",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 581.107113,
+  "eth_block": 25926366,
+  "tx": "0xa11124e213e25b784f9679705bfe05249f2af16da393fcfdec5325a79ae39ed0"
+ },
+ {
+  "bridged_at": "2026-09-07T16:27:47Z",
+  "day": "2026-09-07",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 2262.722509,
+  "eth_block": 25926668,
+  "tx": "0x6c484967e5f6f8a505f37b40c6ec860e303766856eeaa642189a6cde2d8c93d8"
+ },
+ {
+  "bridged_at": "2026-09-08T04:05:11Z",
+  "day": "2026-09-08",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 5072.0,
+  "eth_block": 25930142,
+  "tx": "0x9ad4e42ac6bbb409ac06a30891186e40f689c560d9097dd5e4815b4f2bbb9b2a"
+ },
+ {
+  "bridged_at": "2026-09-08T21:33:47Z",
+  "day": "2026-09-08",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 567.748123,
+  "eth_block": 25935361,
+  "tx": "0xa501ecb71bfd864da190e82feb593bc12f8b1524cb9eca23411cac24dfe940cf"
+ },
+ {
+  "bridged_at": "2026-09-08T23:54:23Z",
+  "day": "2026-09-08",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1018.521974,
+  "eth_block": 25936061,
+  "tx": "0xbb5b46ae2c4903a14baa7d2156a0fdd2ed88324fe31db3c936c5910b474e7286"
+ },
+ {
+  "bridged_at": "2026-09-09T03:24:59Z",
+  "day": "2026-09-09",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 798.354872,
+  "eth_block": 25937109,
+  "tx": "0x4a80d2a0cf2ee05671b2a152d9e25be3e3503e1a4ee257eeba49c8b041023f2d"
+ },
+ {
+  "bridged_at": "2026-09-09T07:55:35Z",
+  "day": "2026-09-09",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 604.583116,
+  "eth_block": 25938457,
+  "tx": "0x76727be408874ff25a8ca9dded8b547a028b5c8be026093cc57e966e4da40601"
+ },
+ {
+  "bridged_at": "2026-09-09T15:57:11Z",
+  "day": "2026-09-09",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 542.426795,
+  "eth_block": 25940854,
+  "tx": "0xe02d352194df4fb095f215b7e45f770ca8c7152d5fc65ca7cbd18fcf761a1d8c"
+ },
+ {
+  "bridged_at": "2026-09-09T16:57:35Z",
+  "day": "2026-09-09",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1295.729545,
+  "eth_block": 25941154,
+  "tx": "0xe428621a378b1fcb4c7eaf48628a99436c71e2cd5e843d131570fc0681dec982"
+ },
+ {
+  "bridged_at": "2026-09-09T21:43:47Z",
+  "day": "2026-09-09",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 537.862607,
+  "eth_block": 25942579,
+  "tx": "0x16454ff460cb3839839b9fcb5e9453d19f92f167fc713741c2f525272633a195"
+ },
+ {
+  "bridged_at": "2026-09-10T09:10:47Z",
+  "day": "2026-09-10",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 576.523919,
+  "eth_block": 25946003,
+  "tx": "0x81628aba5caa76d10aeaab8507c9a2c968fb605a4f26edb20a3ec73cb6052d4c"
+ },
+ {
+  "bridged_at": "2026-09-10T13:31:35Z",
+  "day": "2026-09-10",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 896.843826,
+  "eth_block": 25947303,
+  "tx": "0x9e91dbc9574f00962c5a700a516cd664d49c1410e2803d2834860a862d37251f"
+ },
+ {
+  "bridged_at": "2026-09-10T16:02:11Z",
+  "day": "2026-09-10",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1063.013667,
+  "eth_block": 25948053,
+  "tx": "0x8c3c65660adda4be89ce04717eaab854fccd4ee0dba957312d9d5089679f1de0"
+ },
+ {
+  "bridged_at": "2026-09-10T18:22:35Z",
+  "day": "2026-09-10",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 565.453981,
+  "eth_block": 25948753,
+  "tx": "0x1b75cca27479697f00dd78b90b44b3ebd14689339362feb998df3a10477b4707"
+ },
+ {
+  "bridged_at": "2026-09-11T01:33:47Z",
+  "day": "2026-09-11",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 598.558817,
+  "eth_block": 25950897,
+  "tx": "0xac72393d1fa685ce41e4c9d156b2e06330de0539f9e0b8b1fa02c6596fdaa880"
+ },
+ {
+  "bridged_at": "2026-09-11T14:55:59Z",
+  "day": "2026-09-11",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1013.360765,
+  "eth_block": 25954898,
+  "tx": "0xafaa40dd0788be3dd7de814a82f01f0f6272a50c43d35b70b82cc05f05d5f35b"
+ },
+ {
+  "bridged_at": "2026-09-12T02:08:11Z",
+  "day": "2026-09-12",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1133.553391,
+  "eth_block": 25958242,
+  "tx": "0x9727370ae36a3fd0d657fa827457e9808738d1962473b94e29a3da1394d0f32f"
+ },
+ {
+  "bridged_at": "2026-09-12T14:03:23Z",
+  "day": "2026-09-12",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1008.927404,
+  "eth_block": 25961808,
+  "tx": "0xc741591a012e5c0bd2608e965a1f632d6963b3e6a55c04782a305e936131b720"
+ },
+ {
+  "bridged_at": "2026-09-13T02:15:23Z",
+  "day": "2026-09-13",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 972.754493,
+  "eth_block": 25965455,
+  "tx": "0xb9390c31836354e27dde7591f19b9491668afd12c51cabc0193b190aed222807"
+ },
+ {
+  "bridged_at": "2026-09-13T19:18:35Z",
+  "day": "2026-09-13",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 191.259914,
+  "eth_block": 25970560,
+  "tx": "0x8c3c7a29feb5febfc6aae15bc19178e207117a6c13e15c933591a013300d781b"
+ },
+ {
+  "bridged_at": "2026-09-13T21:35:23Z",
+  "day": "2026-09-13",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 57.54027,
+  "eth_block": 25971243,
+  "tx": "0x1dd75646653216a46aef5924d0979f7b147b0754d08012c61dbdf6d10fbebafa"
+ },
+ {
+  "bridged_at": "2026-09-17T04:37:35Z",
+  "day": "2026-09-17",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 0.602642,
+  "eth_block": 25994863,
+  "tx": "0x1c9f6bc2f5c98d838e09945fd28c0c4e101c4f9810835ab354bff32e5f268595"
+ },
+ {
+  "bridged_at": "2026-09-17T19:51:59Z",
+  "day": "2026-09-17",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 4707.0,
+  "eth_block": 25999421,
+  "tx": "0xc1e29909c3518a072a0535f9f1b34fb5c71025a5806cd2260b8713894d15c3e9"
+ },
+ {
+  "bridged_at": "2026-09-21T14:44:59Z",
+  "day": "2026-09-21",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 2620.68883,
+  "eth_block": 26026563,
+  "tx": "0xdd66043e38686792879762410af68bac03266cf7fa71fb9847c652b1b17cc4cf"
+ },
+ {
+  "bridged_at": "2026-09-23T01:21:59Z",
+  "day": "2026-09-23",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 20.263118,
+  "eth_block": 26036872,
+  "tx": "0x8cd173d0e60ba0bc89517cc24e7176fa120faba11ac6af6af8fd1a5a06e7c1a3"
+ },
+ {
+  "bridged_at": "2026-09-23T12:04:47Z",
+  "day": "2026-09-23",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 853.510619,
+  "eth_block": 26040062,
+  "tx": "0xfece000438051a0ea015a934287b3d4ae2f2e93fb1413d2414fb424bc4d3fe28"
+ },
+ {
+  "bridged_at": "2026-09-23T22:04:59Z",
+  "day": "2026-09-23",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1153.991319,
+  "eth_block": 26043039,
+  "tx": "0x4c7dc0d97baa6dede206937e301ea405e289718792e19b6dc160aafda1fce396"
+ },
+ {
+  "bridged_at": "2026-09-24T15:50:35Z",
+  "day": "2026-09-24",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1050.491045,
+  "eth_block": 26048318,
+  "tx": "0x322c9232f9f7574305f239ad25672e7c949a65101c7213d9960f12e0199907d5"
+ },
+ {
+  "bridged_at": "2026-10-01T20:02:47Z",
+  "day": "2026-10-01",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1148.33706,
+  "eth_block": 26099730,
+  "tx": "0x30dd459f3a768f0691b85318591184fe894e888119bd27c759f6190107c6fee4"
+ },
+ {
+  "bridged_at": "2026-10-10T12:37:23Z",
+  "day": "2026-10-10",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 442.687969,
+  "eth_block": 26162079,
+  "tx": "0x5ea831a70da6ba81de3deabf13b57320b4f37d0654f9089f1f3c6f5b9513a5ac"
+ },
+ {
+  "bridged_at": "2026-10-11T22:22:47Z",
+  "day": "2026-10-11",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 141.159611,
+  "eth_block": 26172173,
+  "tx": "0xdef787bbb574868abbe57cc8754027a23a3fdf4ba2e17d669a8b6bd8b09d35a5"
+ },
+ {
+  "bridged_at": "2026-10-18T03:07:11Z",
+  "day": "2026-10-18",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 1073.513381,
+  "eth_block": 26216653,
+  "tx": "0xcb156a24aa6c51b74e2186bcbb31ba827f98467d2156590cd4563ec21082b00c"
+ },
+ {
+  "bridged_at": "2026-10-19T21:24:59Z",
+  "day": "2026-10-19",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 923.221797,
+  "eth_block": 26229292,
+  "tx": "0x6ed4115be3671203d4c6cf470bd74e55c1e42491d1f28a82f95b2b60666b85c6"
+ },
+ {
+  "bridged_at": "2026-10-20T09:27:23Z",
+  "day": "2026-10-20",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 539.258816,
+  "eth_block": 26232893,
+  "tx": "0xd1899277aef26e06417b71f2c975ca1ef36132c10565e6ef55b2431f74cd5bfa"
+ }
+]
