@@ -111,11 +111,6 @@ window.dash = (function () {
 
   <section class="ib-kpis" id="kpis">
     <div class="ib-card ib-kpi">
-      <div class="ib-label">All chains</div>
-      <div class="ib-big dash-skeleton" data-source="all_chains" data-field="total_burned" data-row="0">—</div>
-      <div class="ib-note">Total burned, IMD</div>
-    </div>
-    <div class="ib-card ib-kpi">
       <div class="ib-label">Base · Fren Pet native</div>
       <div class="ib-big dash-skeleton" data-source="burn_breakdown" data-field="total_burned" data-where="route=Base · Fren Pet native">—</div>
       <div class="ib-note">Burned by the Base token itself ("Fren Pet")</div>
@@ -318,6 +313,7 @@ window.dash = (function () {
     <p class="ib-recent ib-pending">All chains: <span data-source="supply_check" data-field="total_circulating" data-row="0" class="ib-n dash-skeleton">—</span> IMD circulating, against Base's totalSupply of <span data-source="supply_check" data-field="base_total" data-row="0" class="ib-n dash-skeleton">—</span> (<span data-source="supply_check" data-field="diff" data-row="0" class="ib-n dash-skeleton">—</span> in transit on the bridge).</p>
   </section>
   <p class="ib-foot">Ordinary bridging (IMD locked on Base and minted on Ethereum or Robinhood, or burned there and released on Base) is not counted: it moves IMD, it doesn't remove it.</p>
+  <p class="ib-foot"><a href="https://etherscan.io/address/0xe29386719C155B6847aD5a4E97C6674f10ffc750#writeContract" target="_blank" rel="noopener">BurnExecutor on Etherscan: Write Contract ↗</a> · Anyone can send the IMD the BurnExecutor holds to Base, where it is burned (bridgeToBaseBurnReceiver); the caller pays the LayerZero fee and gas.</p>
   <p class="ib-foot ib-status" id="refresh-status">Last refresh <span data-source="refresh_status" data-field="last_success_at" data-row="0" class="ib-n dash-skeleton">—</span> · last request <span data-source="refresh_status" data-field="last_attempt_at" data-row="0" class="dash-skeleton">—</span>: <span data-source="refresh_status" data-field="last_result" data-row="0" class="ib-n dash-skeleton">—</span> · <span data-source="refresh_status" data-field="message" data-row="0" class="dash-skeleton">—</span> Updates run on request, at most once a day.</p>
 </div>
 
@@ -375,6 +371,7 @@ window.dash = (function () {
 .ib-asof { margin: 0; font-size: 11px; color: var(--ib-inv-dim); letter-spacing: .04em; }
 .ib-status { padding-top: 10px; border-top: 1px solid var(--ib-soft); }
 .ib-foot { margin: 0; color: var(--ib-dim); font-size: 11px; }
+.ib-foot a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .ib-n { font-variant-numeric: tabular-nums; font-weight: 600; }
 .ib-kpis.ib-outlook { grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
 .ib-kpis { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }

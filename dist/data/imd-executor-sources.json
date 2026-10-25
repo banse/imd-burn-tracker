@@ -12,19 +12,19 @@
   "source": "IMD/ETH pool burn hook & other Uniswap v4 swaps",
   "kind": "pool hook",
   "address": "0xc6c965bd164c483e87d0b550671798e9a3602840",
-  "imd_sent": 35288.431478,
-  "transfers": 332,
+  "imd_sent": 35321.522074,
+  "transfers": 339,
   "first_day": "2026-09-02",
-  "last_day": "2026-10-21"
+  "last_day": "2026-10-25"
  },
  {
   "source": "Community coins (LaunchpadHook)",
   "kind": "community coins",
   "address": "0x51768f5da32ba2008304cc81674da51acb802888",
-  "imd_sent": 3977.198731,
-  "transfers": 110,
+  "imd_sent": 3980.635942,
+  "transfers": 111,
   "first_day": "2026-08-19",
-  "last_day": "2026-10-16"
+  "last_day": "2026-10-23"
  },
  {
   "source": "surfsurf.eth",
@@ -57,10 +57,19 @@
   "source": "NIGHT WATCHERS (WATCH) #2437",
   "kind": "swarm launch",
   "address": "0xbdff33cffc3f617f808a6de012a2574dbf69d819",
-  "imd_sent": 2.0,
-  "transfers": 2,
+  "imd_sent": 4.0,
+  "transfers": 4,
   "first_day": "2026-10-22",
-  "last_day": "2026-10-22"
+  "last_day": "2026-10-23"
+ },
+ {
+  "source": "Sworn (SWORN) #2404",
+  "kind": "swarm launch",
+  "address": "0x0da2679000ea5380d1361cc3cca7d4e8c881f766",
+  "imd_sent": 1.1,
+  "transfers": 11,
+  "first_day": "2026-10-21",
+  "last_day": "2026-10-25"
  },
  {
   "source": "0x3322\u20264d69",
@@ -79,14 +88,5 @@
   "transfers": 4,
   "first_day": "2026-10-14",
   "last_day": "2026-10-17"
- },
- {
-  "source": "Sworn (SWORN) #2404",
-  "kind": "swarm launch",
-  "address": "0x0da2679000ea5380d1361cc3cca7d4e8c881f766",
-  "imd_sent": 0.7,
-  "transfers": 7,
-  "first_day": "2026-10-21",
-  "last_day": "2026-10-22"
  }
 ]

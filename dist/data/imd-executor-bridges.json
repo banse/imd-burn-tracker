@@ -709,5 +709,14 @@
   "amount": 539.258816,
   "eth_block": 26232893,
   "tx": "0xd1899277aef26e06417b71f2c975ca1ef36132c10565e6ef55b2431f74cd5bfa"
+ },
+ {
+  "bridged_at": "2026-10-23T21:20:59Z",
+  "day": "2026-10-23",
+  "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+  "base_receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+  "amount": 159.563587,
+  "eth_block": 26257982,
+  "tx": "0x9bf7ba20d25c7dec127b334eec923b3ba70b102dfe2e1aa0c7ff9e1a4a664854"
  }
 ]

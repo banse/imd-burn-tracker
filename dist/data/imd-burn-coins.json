@@ -5,9 +5,9 @@
   "symbol": "IMD",
   "type": "Community coin",
   "burn_feature": "LaunchpadHook burn fee on every trade's IMD leg",
-  "imd_to_burn": 1494.053461,
-  "trades": 2373,
-  "volume_eth": 231.845586,
+  "imd_to_burn": 1494.067556,
+  "trades": 2375,
+  "volume_eth": 231.850522,
   "launched": "2026-08-19",
   "rank": 1
  },
@@ -17,9 +17,9 @@
   "symbol": "BALLOON",
   "type": "Community coin",
   "burn_feature": "LaunchpadHook burn fee on every trade's IMD leg",
-  "imd_to_burn": 1179.077389,
-  "trades": 1937,
-  "volume_eth": 203.088628,
+  "imd_to_burn": 1179.148523,
+  "trades": 1941,
+  "volume_eth": 203.114282,
   "launched": "2026-08-19",
   "rank": 2
  },
@@ -29,9 +29,9 @@
   "symbol": "ICE",
   "type": "Community coin",
   "burn_feature": "LaunchpadHook burn fee on every trade's IMD leg",
-  "imd_to_burn": 170.313086,
-  "trades": 335,
-  "volume_eth": 25.11922,
+  "imd_to_burn": 170.315886,
+  "trades": 336,
+  "volume_eth": 25.120184,
   "launched": "2026-08-19",
   "rank": 3
  },
@@ -53,9 +53,9 @@
   "symbol": "FREN PET",
   "type": "Community coin",
   "burn_feature": "LaunchpadHook burn fee on every trade's IMD leg",
-  "imd_to_burn": 116.942052,
-  "trades": 367,
-  "volume_eth": 17.974374,
+  "imd_to_burn": 116.946394,
+  "trades": 369,
+  "volume_eth": 17.97587,
   "launched": "2026-08-19",
   "rank": 5
  },
@@ -65,9 +65,9 @@
   "symbol": "WOOF",
   "type": "Community coin",
   "burn_feature": "LaunchpadHook burn fee on every trade's IMD leg",
-  "imd_to_burn": 90.057371,
-  "trades": 283,
-  "volume_eth": 12.378016,
+  "imd_to_burn": 90.061067,
+  "trades": 285,
+  "volume_eth": 12.379315,
   "launched": "2026-08-19",
   "rank": 6
  },
@@ -89,9 +89,9 @@
   "symbol": "PEPESWARM",
   "type": "Community coin",
   "burn_feature": "LaunchpadHook burn fee on every trade's IMD leg",
-  "imd_to_burn": 78.28814,
-  "trades": 208,
-  "volume_eth": 13.523034,
+  "imd_to_burn": 78.291038,
+  "trades": 209,
+  "volume_eth": 13.524037,
   "launched": "2026-08-19",
   "rank": 8
  },
@@ -173,9 +173,9 @@
   "symbol": "FWAI",
   "type": "Community coin",
   "burn_feature": "LaunchpadHook burn fee on every trade's IMD leg",
-  "imd_to_burn": 23.33629,
-  "trades": 64,
-  "volume_eth": 5.82942,
+  "imd_to_burn": 23.340293,
+  "trades": 65,
+  "volume_eth": 5.830786,
   "launched": "2026-09-02",
   "rank": 15
  },
@@ -480,6 +480,18 @@
   "rank": 40
  },
  {
+  "address": "0xbdff33cffc3f617f808a6de012a2574dbf69d819",
+  "name": "NIGHT WATCHERS #2437",
+  "symbol": "WATCH",
+  "type": "Swarm launch #2437",
+  "burn_feature": "Sends IMD to the BurnExecutor",
+  "imd_to_burn": 4.0,
+  "trades": null,
+  "volume_eth": null,
+  "launched": "2026-10-21",
+  "rank": 41
+ },
+ {
   "address": "0x9e01ab04044119c78524ffa486124a9142a790e3",
   "name": "Agent Decentralized Asset Management",
   "symbol": "ADAM",
@@ -489,7 +501,7 @@
   "trades": 12,
   "volume_eth": 0.624378,
   "launched": "2026-08-19",
-  "rank": 41
+  "rank": 42
  },
  {
   "address": "0xb1d3ca5dab6017fa78531364806b01af2595fa2f",
@@ -501,7 +513,7 @@
   "trades": 14,
   "volume_eth": 0.600982,
   "launched": "2026-08-19",
-  "rank": 42
+  "rank": 43
  },
  {
   "address": "0x3128750f0153308e19d296cebc6aae8d0c7f38cd",
@@ -513,7 +525,7 @@
   "trades": 18,
   "volume_eth": 3.247853,
   "launched": "2026-10-05",
-  "rank": 43
+  "rank": 44
  },
  {
   "address": "0x6081cc62ce68647f2c0c52c4cee3eee0eb2d68fa",
@@ -525,7 +537,7 @@
   "trades": 2,
   "volume_eth": 0.488157,
   "launched": "2026-08-19",
-  "rank": 44
+  "rank": 45
  },
  {
   "address": "0x8f96c0596486cf9b7ef29ac44ec01bfc92e55527",
@@ -537,7 +549,7 @@
   "trades": 6,
   "volume_eth": 0.408184,
   "launched": "2026-08-19",
-  "rank": 45
+  "rank": 46
  },
  {
   "address": "0xdb4a37625b2d14c2f6dc100ee893ed6f6b06ccae",
@@ -549,7 +561,7 @@
   "trades": 5,
   "volume_eth": 0.41772,
   "launched": "2026-08-19",
-  "rank": 46
+  "rank": 47
  },
  {
   "address": "0x841890e52cc0a4f4c9b2ef7b270d0871af96060c",
@@ -561,7 +573,7 @@
   "trades": 2,
   "volume_eth": 0.399194,
   "launched": "2026-08-19",
-  "rank": 47
+  "rank": 48
  },
  {
   "address": "0x2b79fd91f64aea458ec8e0d2bcc08aa4c5d0b719",
@@ -573,7 +585,7 @@
   "trades": 13,
   "volume_eth": 1.524532,
   "launched": "2026-09-29",
-  "rank": 48
+  "rank": 49
  },
  {
   "address": "0xd92c230d8ac4b1eaa058b32c1ad1e4e1340f5dea",
@@ -585,18 +597,6 @@
   "trades": 4,
   "volume_eth": 0.299161,
   "launched": "2026-08-19",
-  "rank": 49
- },
- {
-  "address": "0xbdff33cffc3f617f808a6de012a2574dbf69d819",
-  "name": "NIGHT WATCHERS #2437",
-  "symbol": "WATCH",
-  "type": "Swarm launch #2437",
-  "burn_feature": "Sends IMD to the BurnExecutor",
-  "imd_to_burn": 2.0,
-  "trades": null,
-  "volume_eth": null,
-  "launched": "2026-10-21",
   "rank": 50
  },
  {
@@ -684,6 +684,18 @@
   "rank": 57
  },
  {
+  "address": "0xf564dd76bd081554170c5e0b78144abfb39f7061",
+  "name": "Sworn #2404",
+  "symbol": "SWORN",
+  "type": "Swarm launch #2404",
+  "burn_feature": "Sends IMD to the BurnExecutor",
+  "imd_to_burn": 1.1,
+  "trades": null,
+  "volume_eth": null,
+  "launched": "2026-10-21",
+  "rank": 58
+ },
+ {
   "address": "0x98431515ccf8ba06704739bec386cb9507bb0cde",
   "name": "surf",
   "symbol": "surf",
@@ -693,7 +705,7 @@
   "trades": 6,
   "volume_eth": 0.167417,
   "launched": "2026-08-19",
-  "rank": 58
+  "rank": 59
  },
  {
   "address": "0x7ce69a5fbbcec002b13fbde2915776b7b021d45f",
@@ -705,7 +717,7 @@
   "trades": 2,
   "volume_eth": 0.205256,
   "launched": "2026-09-05",
-  "rank": 59
+  "rank": 60
  },
  {
   "address": "0x5f96fec298c634bc9ad98c47864993ff8e202ae4",
@@ -717,7 +729,7 @@
   "trades": 7,
   "volume_eth": 0.245647,
   "launched": "2026-09-06",
-  "rank": 60
+  "rank": 61
  },
  {
   "address": "0xe56b29e2bb32fd036f3e08bf6ee2a874b4713248",
@@ -725,11 +737,11 @@
   "symbol": "VANGUARD",
   "type": "Community coin",
   "burn_feature": "LaunchpadHook burn fee on every trade's IMD leg",
-  "imd_to_burn": 0.755002,
-  "trades": 31,
-  "volume_eth": 0.32064,
+  "imd_to_burn": 0.775631,
+  "trades": 32,
+  "volume_eth": 0.328398,
   "launched": "2026-09-06",
-  "rank": 61
+  "rank": 62
  },
  {
   "address": "0xb77660b07d4ca78332083b7f098004f32b4d6f52",
@@ -741,18 +753,6 @@
   "trades": 2,
   "volume_eth": 0.14,
   "launched": "2026-08-19",
-  "rank": 62
- },
- {
-  "address": "0xf564dd76bd081554170c5e0b78144abfb39f7061",
-  "name": "Sworn #2404",
-  "symbol": "SWORN",
-  "type": "Swarm launch #2404",
-  "burn_feature": "Sends IMD to the BurnExecutor",
-  "imd_to_burn": 0.7,
-  "trades": null,
-  "volume_eth": null,
-  "launched": "2026-10-21",
   "rank": 63
  },
  {
@@ -2556,6 +2556,18 @@
   "rank": 213
  },
  {
+  "address": "0x6585f6987205f5f5216d4b8c6d15624269e47009",
+  "name": "BurnTracker #2547",
+  "symbol": "\u2014",
+  "type": "Swarm launch #2547",
+  "burn_feature": "BurnTracker",
+  "imd_to_burn": 0.0,
+  "trades": null,
+  "volume_eth": null,
+  "launched": "2026-10-24",
+  "rank": 214
+ },
+ {
   "address": "0x49e55a87aa4bb0d2fd58fdcf1a31c9612de015dc",
   "name": "YOLO #2364",
   "symbol": "YOLO",
@@ -2565,7 +2577,7 @@
   "trades": null,
   "volume_eth": null,
   "launched": "2026-10-21",
-  "rank": 214
+  "rank": 215
  },
  {
   "address": "0xb1dfe46f912543e366175201edb298263911a1aa",
@@ -2577,7 +2589,7 @@
   "trades": null,
   "volume_eth": null,
   "launched": "2026-10-12",
-  "rank": 215
+  "rank": 216
  },
  {
   "address": "0x45098bc496b3fdc870f89b8785047fb0e19ee99a",
@@ -2589,7 +2601,7 @@
   "trades": null,
   "volume_eth": null,
   "launched": "2026-10-09",
-  "rank": 216
+  "rank": 217
  },
  {
   "address": "0x9158a5c8ccf7b02e845a8d66c12446fb2e529755",
@@ -2601,7 +2613,7 @@
   "trades": null,
   "volume_eth": null,
   "launched": "2026-10-13",
-  "rank": 217
+  "rank": 218
  },
  {
   "address": "0x4f2bacee5f2e7ce3f48dfbd635d96e9a8fcbe478",
@@ -2613,6 +2625,6 @@
   "trades": null,
   "volume_eth": null,
   "launched": "2026-10-08",
-  "rank": 218
+  "rank": 219
  }
 ]

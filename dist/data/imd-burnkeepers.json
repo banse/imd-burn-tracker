@@ -88,6 +88,17 @@
   "label": "0x200e\u20260fb1"
  },
  {
+  "keeper": "0x887b86b6b6957f7bbea88b8cefd392f39236a88c",
+  "ens": "hisdudeness.eth",
+  "bridges": 2,
+  "imd_sent_to_burn": 182.843854,
+  "eth_spent": 0.002136,
+  "first_day": "2026-08-22",
+  "last_day": "2026-10-23",
+  "rank": 9,
+  "label": "hisdudeness.eth"
+ },
+ {
   "keeper": "0xddf8b18404fabae7bf6e30c2c74c9c1fe77d9cda",
   "ens": "",
   "bridges": 1,
@@ -95,7 +106,7 @@
   "eth_spent": 0.000268,
   "first_day": "2026-10-11",
   "last_day": "2026-10-11",
-  "rank": 9,
+  "rank": 10,
   "label": "0xddf8\u20269cda"
  },
  {
@@ -106,7 +117,7 @@
   "eth_spent": 0.000361,
   "first_day": "2026-09-03",
   "last_day": "2026-09-03",
-  "rank": 10,
+  "rank": 11,
   "label": "cumrocket.eth"
  },
  {
@@ -117,7 +128,7 @@
   "eth_spent": 0.00125,
   "first_day": "2026-09-04",
   "last_day": "2026-09-04",
-  "rank": 11,
+  "rank": 12,
   "label": "0x98df\u2026ae81"
  },
  {
@@ -128,19 +139,8 @@
   "eth_spent": 0.00069,
   "first_day": "2026-08-20",
   "last_day": "2026-08-20",
-  "rank": 12,
-  "label": "0x84cb\u2026f8e7"
- },
- {
-  "keeper": "0x887b86b6b6957f7bbea88b8cefd392f39236a88c",
-  "ens": "hisdudeness.eth",
-  "bridges": 1,
-  "imd_sent_to_burn": 23.280267,
-  "eth_spent": 0.001122,
-  "first_day": "2026-08-22",
-  "last_day": "2026-08-22",
   "rank": 13,
-  "label": "hisdudeness.eth"
+  "label": "0x84cb\u2026f8e7"
  },
  {
   "keeper": "0xc2c69e2dee2b36bb3fcdd05c6226d2e33873153b",
