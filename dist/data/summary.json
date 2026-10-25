@@ -1,0 +1,22 @@
+{
+ "ok": true,
+ "problems": [],
+ "as_of": "2026-10-25T02:01:33Z",
+ "total_burned_all_chains": 2909295.17,
+ "base_native": 2750913.56,
+ "base_executor": 157471.53,
+ "ethereum": 875.33,
+ "robinhood": 34.74,
+ "supply_now": 7091660.29,
+ "executor_bridges": 80,
+ "history_days": 1152,
+ "executors": [
+  "0x2ec59bed2fb9dee447bbec6e3bca249782c9b88b",
+  "0xe29386719c155b6847ad5a4e97c6674f10ffc750"
+ ],
+ "circulating_all_chains": 7091536.32,
+ "burnkeepers": 15,
+ "executor_sources": 10,
+ "burn_coins": 219,
+ "executor_inflows": 157503.14
+}

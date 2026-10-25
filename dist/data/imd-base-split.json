@@ -1,8 +1,8 @@
 [
  {
   "method": "Burned natively on Base",
-  "amount": 2750912.558854,
-  "burn_function": 2750867.181491,
+  "amount": 2750913.558854,
+  "burn_function": 2750868.181491,
   "burn_wallets": 45.377364,
   "note": "burn() on the Base token by anyone other than the BurnExecutor's receiver, plus tokens sent to 0x\u2026dEaD/0x\u20260000/0x\u20260001 on Base"
  },
