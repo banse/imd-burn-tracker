@@ -7,6 +7,8 @@ A static dashboard of every IMD token burned on Base, Ethereum and Robinhood Cha
 - `npm run build` refreshes `dist/data/` from public sources (`node refresh/refresh.mjs dist/data`). It replaces
   the files only when every sanity check passes, and otherwise keeps them and records why in
   `dist/data/imd-refresh-status.json`.
+- `dist/data/imd-contracts.json` names the contracts the page's two cards talk to (the BurnTracker that orders refreshes, the
+  BurnExecutor, the LaunchpadHook, the Base burn receiver); a refresh never touches it. Another deployment changes only this file.
 - `refresh/refresh_imd.py` is the original Python refresh (needs `pycryptodome`). `refresh/refresh.mjs` and `refresh/keccak.mjs` are
   its Node port, written by the IMD swarm in launch-2523 (commit b829e62, 2026-10-23, compared against the Python output there);
   `refresh/PORT.md` describes the port. Both scripts start from the two known BurnExecutors and add a contract that

@@ -1,0 +1,10 @@
+{
+ "chainId": 1,
+ "tracker": "0x6585f6987205f5f5216d4b8c6d15624269e47009",
+ "executor": "0xe29386719c155b6847ad5a4e97c6674f10ffc750",
+ "hook": "0x51768f5da32ba2008304cc81674da51acb802888",
+ "receiver": "0xf9d7cbf5bef2f5c9ba93a70f31ddca6457716793",
+ "dstEid": 30184,
+ "fromBlock": 26264095,
+ "note": "Addresses the page's Refresh and Burn cards use: the BurnTracker that orders refreshes, the BurnExecutor V2, the LaunchpadHook and the Base burn receiver. The data refresh never touches this file."
+}

@@ -98,7 +98,7 @@ window.dash = (function () {
       <span data-source="base_split_share" data-field="share" data-where="method=Bridged from Ethereum via BurnExecutor" class="ib-n dash-skeleton">—</span> came over from Ethereum through the BurnExecutor.
       Supply is down <span data-source="supply_change" data-field="pct" data-row="0" class="ib-n dash-skeleton">—</span> from the 10M start.
     </p>
-    <p class="ib-asof">Snapshot <span data-source="burns" data-field="as_of" data-where="chain=Base" class="dash-skeleton">—</span> · read from each chain's public RPC</p>
+    <p class="ib-asof">Snapshot <span data-source="burns" data-field="as_of" data-where="chain=Base" class="dash-skeleton">—</span> · read from each chain's public RPC · <a href="#refresh">refresh this page ↓</a></p>
    </div>
    <figure class="ib-pie-wrap" id="supply-pie">
     <div class="ib-pie" data-source="all_chains supply" aria-label="imd.fun logo filled with the burned share of the 10M starting supply"></div>
@@ -312,6 +312,57 @@ window.dash = (function () {
     </div>
     <p class="ib-recent ib-pending">All chains: <span data-source="supply_check" data-field="total_circulating" data-row="0" class="ib-n dash-skeleton">—</span> IMD circulating, against Base's totalSupply of <span data-source="supply_check" data-field="base_total" data-row="0" class="ib-n dash-skeleton">—</span> (<span data-source="supply_check" data-field="diff" data-row="0" class="ib-n dash-skeleton">—</span> in transit on the bridge).</p>
   </section>
+<style>
+.ib-refresh { margin-top: 14px; }
+.ib-rf-lead { margin: 0 0 12px; font-size: 12.5px; max-width: 70ch; }
+.ib-rf-grid { display: grid; gap: 6px 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+.ib-rf-rows:empty { display: none; }
+.ib-rf-row { display: flex; gap: 10px; font-size: 11.5px; line-height: 1.5; min-width: 0; }
+.ib-rf-k { color: var(--ib-dim); flex: 0 0 9.5em; white-space: nowrap; text-transform: uppercase; font-size: 10.5px; letter-spacing: .04em; padding-top: 2px; }
+.ib-rf-v { min-width: 0; overflow-wrap: anywhere; }
+.ib-rf-v.warn { color: var(--ib-dim); }
+.ib-rf-v.bad { text-decoration: underline; text-underline-offset: 2px; }
+.ib-rf-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.ib-btn { font: inherit; font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; padding: 9px 14px; border: var(--ib-rule); background: var(--ib-paper); color: var(--ib-ink); border-radius: 0; cursor: pointer; }
+.ib-btn:disabled { color: var(--ib-dim); cursor: default; }
+.ib-btn-primary:not(:disabled) { background: var(--ib-ink); color: var(--ib-paper); }
+.ib-rf-note { margin: 10px 0 0; font-size: 11.5px; min-height: 1.3em; overflow-wrap: anywhere; }
+.ib-rf-note.bad { text-decoration: underline; text-underline-offset: 2px; }
+.ib-rf-fine { margin: 10px 0 0; font-size: 11px; color: var(--ib-dim); }
+.ib-rf-fine a, .ib-rf-v a, .ib-rf-note a, .ib-asof a { color: inherit; }
+</style>
+<section class="ib-card ib-refresh" id="refresh">
+  <div class="ib-h"><span class="ib-label">Refresh this page</span></div>
+  <p class="ib-rf-lead">Anyone can order the next refresh for 0.5 IMD. The contract pays the IMD swarm to rebuild this page from the chains; the new version replaces this one about twenty minutes later.</p>
+  <div class="ib-rf-grid">
+    <div id="rf-status" class="ib-rf-rows"></div>
+    <div id="rf-proof" class="ib-rf-rows"></div>
+    <div id="rf-wallet" class="ib-rf-rows"></div>
+  </div>
+  <div class="ib-rf-actions">
+    <button type="button" class="ib-btn" id="rf-connect">Connect wallet</button>
+    <button type="button" class="ib-btn" id="rf-approve" disabled>Approve 0.5 IMD</button>
+    <button type="button" class="ib-btn ib-btn-primary" id="rf-update" disabled>Refresh now · 0.5 IMD</button>
+  </div>
+  <p id="rf-note" class="ib-rf-note"></p>
+  <p class="ib-rf-fine">Contract <a data-contract="tracker" href="https://etherscan.io/address/0x6585f6987205f5f5216d4b8c6d15624269e47009" target="_blank" rel="noopener">0x6585…7009</a> on Ethereum · needs a browser wallet on Ethereum mainnet · the page reads public RPCs and an IPFS gateway, nothing else.</p>
+</section>
+<section class="ib-card ib-refresh" id="burn">
+  <div class="ib-h"><span class="ib-label">Burn what the executor holds</span></div>
+  <p class="ib-rf-lead">IMD from pool fees and launches collects on the Ethereum BurnExecutor. Anyone can send what it holds to Base, where it is burned on arrival. You pay the LayerZero fee in ETH and the gas; the IMD is not yours and never passes through your wallet.</p>
+  <div class="ib-rf-grid">
+    <div id="bx-status" class="ib-rf-rows"></div>
+    <div id="bx-hook" class="ib-rf-rows"></div>
+    <div id="bx-wallet" class="ib-rf-rows"></div>
+  </div>
+  <div class="ib-rf-actions">
+    <button type="button" class="ib-btn" id="bx-connect">Connect wallet</button>
+    <button type="button" class="ib-btn" id="bx-sweep" disabled hidden>Sweep the hook first</button>
+    <button type="button" class="ib-btn ib-btn-primary" id="bx-bridge" disabled>Bridge and burn</button>
+  </div>
+  <p id="bx-note" class="ib-rf-note"></p>
+  <p class="ib-rf-fine">BurnExecutor <a data-contract="executor" href="https://etherscan.io/address/0xe29386719C155B6847aD5a4E97C6674f10ffc750#writeContract" target="_blank" rel="noopener">0xe293…c750</a> · LaunchpadHook <a data-contract="hook" href="https://etherscan.io/address/0x51768f5da32ba2008304cc81674da51acb802888" target="_blank" rel="noopener">0x5176…2888</a> · Ethereum mainnet · the page reads public RPCs, nothing else.</p>
+</section>
   <p class="ib-foot">Ordinary bridging (IMD locked on Base and minted on Ethereum or Robinhood, or burned there and released on Base) is not counted: it moves IMD, it doesn't remove it.</p>
   <p class="ib-foot"><a href="https://etherscan.io/address/0xe29386719C155B6847aD5a4E97C6674f10ffc750#writeContract" target="_blank" rel="noopener">BurnExecutor on Etherscan: Write Contract ↗</a> · Anyone can send the IMD the BurnExecutor holds to Base, where it is burned (bridgeToBaseBurnReceiver); the caller pays the LayerZero fee and gas.</p>
   <p class="ib-foot ib-status" id="refresh-status">Last refresh <span data-source="refresh_status" data-field="last_success_at" data-row="0" class="ib-n dash-skeleton">—</span> · last request <span data-source="refresh_status" data-field="last_attempt_at" data-row="0" class="dash-skeleton">—</span>: <span data-source="refresh_status" data-field="last_result" data-row="0" class="ib-n dash-skeleton">—</span> · <span data-source="refresh_status" data-field="message" data-row="0" class="dash-skeleton">—</span> Updates run on request, at most once a day.</p>
@@ -1058,5 +1109,230 @@ dash.calc('burn_eta', {
 </script>
 
 </div>
+<script>
+(() => {
+const RC = ["0x1","0x8082","0x800000000000808a","0x8000000080008000","0x808b","0x80000001","0x8000000080008081",
+  "0x8000000000008009","0x8a","0x88","0x80008009","0x8000000a","0x8000808b","0x800000000000008b","0x8000000000008089",
+  "0x8000000000008003","0x8000000000008002","0x8000000000000080","0x800a","0x800000008000000a","0x8000000080008081",
+  "0x8000000000008080","0x80000001","0x8000000080008008"].map(BigInt);
+const ROT = [[0,36,3,41,18],[1,44,10,45,2],[62,6,43,15,61],[28,55,25,21,56],[27,20,39,8,14]];
+const M64 = (1n << 64n) - 1n;
+const rol = (v, n) => n === 0 ? v : (((v << BigInt(n)) | (v >> BigInt(64 - n))) & M64);
+function keccak256(bytes) {
+  const rate = 136, msg = new Uint8Array(Math.ceil((bytes.length + 1) / rate) * rate);
+  msg.set(bytes); msg[bytes.length] ^= 0x01; msg[msg.length - 1] ^= 0x80;
+  const a = Array.from({length: 5}, () => Array(5).fill(0n));
+  for (let off = 0; off < msg.length; off += rate) {
+    for (let i = 0; i < rate / 8; i++) {
+      let lane = 0n;
+      for (let k = 7; k >= 0; k--) lane = (lane << 8n) | BigInt(msg[off + 8 * i + k]);
+      a[i % 5][Math.floor(i / 5)] ^= lane;
+    }
+    for (const rc of RC) {
+      const c = [0,1,2,3,4].map(x => a[x][0] ^ a[x][1] ^ a[x][2] ^ a[x][3] ^ a[x][4]);
+      const d = [0,1,2,3,4].map(x => c[(x + 4) % 5] ^ rol(c[(x + 1) % 5], 1));
+      const b = Array.from({length: 5}, () => Array(5).fill(0n));
+      for (let x = 0; x < 5; x++) for (let y = 0; y < 5; y++) b[y][(2 * x + 3 * y) % 5] = rol(a[x][y] ^ d[x], ROT[x][y]);
+      for (let x = 0; x < 5; x++) for (let y = 0; y < 5; y++) a[x][y] = b[x][y] ^ ((~b[(x + 1) % 5][y] & M64) & b[(x + 2) % 5][y]);
+      a[0][0] ^= rc;
+    }
+  }
+  let hex = "";
+  for (let i = 0; i < 4; i++) { let lane = a[i % 5][Math.floor(i / 5)]; for (let k = 0; k < 8; k++) { hex += Number(lane & 0xffn).toString(16).padStart(2, "0"); lane >>= 8n; } }
+  return "0x" + hex;
+}
+// The addresses live in data/imd-contracts.json beside the other data files, so the same page serves another deployment.
+const CFG = {chainId: 1, headroom: 125n, dstEid: 30184,
+  rpcs: ["https://ethereum-rpc.publicnode.com", "https://eth.drpc.org", "https://rpc.mevblocker.io", "https://eth.llamarpc.com"],
+  gateways: ["https://ipfs.filebase.io/ipfs/", "https://ipfs.io/ipfs/", "https://dweb.link/ipfs/", "https://gateway.pinata.cloud/ipfs/"]};
+async function loadContracts() {
+  const r = await fetch("data/imd-contracts.json", {cache: "no-store"}); if (!r.ok) throw new Error("data/imd-contracts.json is missing");
+  const c = await r.json(); const addr = v => /^0x[0-9a-fA-F]{40}$/.test(v || "") ? v.toLowerCase() : null;
+  CFG.tracker = addr(c.tracker); CFG.executor = addr(c.executor); CFG.hook = addr(c.hook); CFG.receiver = addr(c.receiver);
+  CFG.fromBlock = Number.isInteger(c.fromBlock) ? c.fromBlock : 0; if (Number.isInteger(c.dstEid)) CFG.dstEid = c.dstEid;
+  if (!CFG.tracker || !CFG.executor || !CFG.hook || !CFG.receiver) throw new Error("data/imd-contracts.json names no valid addresses");
+  document.querySelectorAll("[data-contract]").forEach(a => { const k = a.getAttribute("data-contract"), v = CFG[k]; if (v) { a.href = a.href.replace(/0x[0-9a-fA-F]{40}/, v); a.textContent = v.slice(0, 6) + "…" + v.slice(-4); } });
+}
+const enc = new TextEncoder(), dec = new TextDecoder();
+const sel = s => keccak256(enc.encode(s)).slice(2, 10);
+const topic = s => keccak256(enc.encode(s));
+const toHex = b => Array.from(b, x => x.toString(16).padStart(2, "0")).join("");
+const fromHex = h => { h = h.replace(/^0x/, ""); const o = new Uint8Array(h.length / 2); for (let i = 0; i < o.length; i++) o[i] = parseInt(h.substr(2 * i, 2), 16); return o; };
+const word = v => (typeof v === "string" ? v.replace(/^0x/, "") : BigInt(v).toString(16)).padStart(64, "0");
+const words = h => (h.replace(/^0x/, "").match(/.{64}/g) || []);
+const decDyn = (h, i) => { h = h.replace(/^0x/, ""); const off = parseInt(h.substr(64 * i, 64), 16) * 2; const len = parseInt(h.substr(off, 64), 16); return fromHex(h.substr(off + 64, len * 2)); };
+const callUpdate = (b, maxPrice) => { const pad = (64 - (b.length * 2) % 64) % 64; return "0x" + sel("updateBurntracker(bytes,uint256)") + word(64) + word(maxPrice) + word(b.length) + toHex(b) + "0".repeat(pad); };
+const ERRORS = {};
+["WrongState()", "CooldownActive(uint256)", "InvalidProof()", "InvalidParentJobId()", "PriceTooHigh(uint256,uint256)", "InvalidAction()", "InvalidRequestId()",
+ "NotPending(bytes32)", "UnsupportedAsset()", "ActionNotSold()", "ReentrancyGuardReentrantCall()", "SafeERC20FailedOperation(address)", "PriceNotMet(uint256,uint256)",
+ "ERC20InsufficientAllowance(address,uint256,uint256)", "ERC20InsufficientBalance(address,uint256,uint256)",
+ "BelowMinBridgeAmount(uint256,uint256)", "BelowOftMinimum(uint256,uint256)", "InsufficientMessageFee(uint256,uint256)", "InvalidBridgeAmount()", "InvalidBridgeConfig()",
+ "InvalidBridgeRecipient()", "Reentrancy()", "Unauthorized()"].forEach(e => ERRORS["0x" + sel(e)] = e);
+const PLAIN = {"WrongState()": "the page is being rebuilt right now", "CooldownActive(uint256)": "the next refresh is not open yet", "InvalidProof()": "the page changed in the meantime; reload and try again",
+  "InvalidParentJobId()": "the current version's record is unusable", "PriceTooHigh(uint256,uint256)": "the price went up; reload", "ERC20InsufficientAllowance(address,uint256,uint256)": "approve 0.5 IMD first",
+  "ERC20InsufficientBalance(address,uint256,uint256)": "not enough IMD in this wallet", "BelowMinBridgeAmount(uint256,uint256)": "less than the minimum is on the executor",
+  "BelowOftMinimum(uint256,uint256)": "too little on the executor for the bridge", "InsufficientMessageFee(uint256,uint256)": "the LayerZero fee rose; reload", "InvalidBridgeAmount()": "nothing to bridge right now"};
+let WALLET = null, ACCOUNT = null, rpcAt = 0;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const imd = w => (Number(BigInt(w)) / 1e18).toLocaleString("en-US", {maximumFractionDigits: 2}) + " IMD";
+const eth = w => (Number(BigInt(w)) / 1e18).toLocaleString("en-US", {maximumFractionDigits: 6}) + " ETH";
+const when = t => new Date(t * 1000).toISOString().replace("T", " ").slice(0, 16) + " UTC";
+const short = a => a.slice(0, 6) + "…" + a.slice(-4);
+const row = (k, v, c) => `<div class="ib-rf-row"><span class="ib-rf-k">${k}</span><span class="ib-rf-v ${c || ""}">${v}</span></div>`;
+const note = (id, html, c) => { $(id).className = "ib-rf-note " + (c || ""); $(id).innerHTML = html; };
+async function rpc(method, params) {
+  let last = null;
+  for (let i = 0; i < CFG.rpcs.length; i++) {
+    const url = CFG.rpcs[(rpcAt + i) % CFG.rpcs.length];
+    try {
+      const r = await fetch(url, {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify({jsonrpc: "2.0", id: 1, method, params})});
+      const j = await r.json();
+      if (j.error) { const e = new Error(j.error.message); e.data = j.error.data; if (e.data) throw e; last = e; continue; }
+      rpcAt = (rpcAt + i) % CFG.rpcs.length; return j.result;
+    } catch (e) { if (e.data) throw e; last = e; }
+  }
+  throw last || new Error("no public RPC answered");
+}
+const call = (to, data, from, value) => rpc("eth_call", [Object.assign({to, data}, from ? {from} : {}, value ? {value: "0x" + value.toString(16)} : {}), "latest"]);
+const plain = e => { const d = typeof e.data === "string" ? e.data : (e.data && e.data.data) || ""; const n = ERRORS[d.slice(0, 10)]; return n ? (PLAIN[n] || n) : e.message; };
+async function waitReceipt(h) { for (let i = 0; i < 120; i++) { const r = await rpc("eth_getTransactionReceipt", [h]); if (r) return r; await new Promise(res => setTimeout(res, 2500)); } throw new Error("no receipt after 5 minutes; check the wallet"); }
+async function send(noteId, to, data, value) {
+  const tx = {from: ACCOUNT, to, data}; if (value) tx.value = "0x" + value.toString(16);
+  const h = await WALLET.request({method: "eth_sendTransaction", params: [tx]});
+  note(noteId, `Sent <a href="https://etherscan.io/tx/${esc(h)}" target="_blank" rel="noopener">${esc(h.slice(0, 10))}…</a>, waiting for the block…`);
+  const r = await waitReceipt(h); r.hash = h; return r;
+}
+function findWallet() { return new Promise(res => { const f = []; window.addEventListener("eip6963:announceProvider", e => f.push(e.detail)); window.dispatchEvent(new Event("eip6963:requestProvider")); setTimeout(() => res(f.length ? f[0].provider : window.ethereum || null), 300); }); }
+function showAccount() { ["rf-connect", "bx-connect"].forEach(id => $(id).textContent = ACCOUNT ? short(ACCOUNT) : "Connect wallet"); }
+async function connect(noteId) {
+  WALLET = await findWallet();
+  if (!WALLET) { note(noteId, "No browser wallet found. Install one, or open this page in your wallet's browser.", "bad"); return; }
+  const accs = await WALLET.request({method: "eth_requestAccounts"}); ACCOUNT = (accs[0] || "").toLowerCase();
+  if (!/^0x[0-9a-f]{40}$/.test(ACCOUNT)) { ACCOUNT = null; note(noteId, "The wallet returned no account.", "bad"); return; }
+  if (parseInt(await WALLET.request({method: "eth_chainId"}), 16) !== CFG.chainId) {
+    try { await WALLET.request({method: "wallet_switchEthereumChain", params: [{chainId: "0x1"}]}); } catch (e) { note(noteId, "Switch the wallet to Ethereum mainnet, then connect again.", "bad"); return; }
+  }
+  if (WALLET.on && !WALLET.__watch) { WALLET.__watch = true; WALLET.on("accountsChanged", l => { const n = (l && l[0] || "").toLowerCase(); ACCOUNT = /^0x[0-9a-f]{40}$/.test(n) ? n : null; showAccount(); rfWallet(); bxWallet(); }); }
+  showAccount(); note(noteId, "");
+  await Promise.all([rfWallet(), bxWallet()]);
+}
+
+// ---------------------------------------------------------------- refresh this page
+let S = {}, DOC = null, JOB = null;
+const view = sig => call(CFG.tracker, "0x" + sel(sig));
+async function rfState() {
+  const st = words(await view("status()"));
+  S = {state: parseInt(st[0], 16), lastDone: parseInt(st[2], 16), orderedAt: parseInt(st[3], 16), cooldown: parseInt(st[5], 16),
+    resultHash: "0x" + words(await view("resultHash()"))[0], asset: "0x" + words(await view("asset()"))[0].slice(24), price: BigInt("0x" + words(await view("price()"))[0])};
+  S.now = parseInt((await rpc("eth_getBlockByNumber", ["latest", false])).timestamp, 16); S.nextAt = S.lastDone + S.cooldown; S.open = S.state === 2 && S.now >= S.nextAt;
+  $("rf-approve").textContent = "Approve " + imd(S.price); $("rf-update").textContent = "Refresh now · " + imd(S.price);
+  const rows = [row("price", imd(S.price) + " per refresh, paid by whoever orders it")];
+  if (S.state === 2) rows.push(row("next refresh", S.open ? "open now" : "from " + when(S.nextAt) + " (in " + Math.ceil((S.nextAt - S.now) / 60) + " min)", S.open ? "" : "warn"));
+  else if (S.state === 3) rows.push(row("status", "the swarm is rebuilding the page, ordered " + when(S.orderedAt) + "; the new version appears here when it is live", "warn"));
+  else if (S.state === 4) rows.push(row("status", "the last order ended without a result; the owner has to step in", "bad"));
+  else rows.push(row("status", "the contract has not hosted the page yet", "warn"));
+  $("rf-status").innerHTML = rows.join("");
+}
+async function getLogs(address, topics) {
+  const head = parseInt(await rpc("eth_blockNumber", []), 16);
+  let out = [], from = CFG.fromBlock, chunk = 50000;
+  while (from <= head) {
+    const to = Math.min(from + chunk - 1, head);
+    try { out = out.concat(await rpc("eth_getLogs", [{address, topics, fromBlock: "0x" + from.toString(16), toBlock: "0x" + to.toString(16)}])); from = to + 1; }
+    catch (e) { if (chunk <= 2000) throw e; chunk = Math.floor(chunk / 5); }
+  }
+  return out;
+}
+async function fetchDoc(uri) {
+  const m = uri.match(/^ipfs:\/\/(.+)$/); if (!m) return null;
+  for (const g of CFG.gateways) {
+    const u = g + m[1];
+    try { const r = await fetch(u, {cache: "no-store"}); if (!r.ok) continue; const b = new Uint8Array(await r.arrayBuffer()); if (keccak256(b) === S.resultHash) return {doc: b, src: u}; } catch (e) {}
+  }
+  return null;
+}
+function jobIdOf(b) { const t = dec.decode(b), key = '"jobId":"', i = t.indexOf(key); if (i < 0 || t.indexOf(key, i + 1) >= 0) return null; const id = t.substr(i + key.length, 36); return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id) && t[i + key.length + 36] === '"' ? id : null; }
+async function rfProof() {
+  DOC = null; JOB = null; $("rf-proof").innerHTML = "";
+  if (S.state !== 2) return;
+  const logs = await getLogs(CFG.tracker, [topic("Updated(bytes32,bytes32,string)")]);
+  const hit = logs.reverse().find(l => "0x" + words(l.data)[0] === S.resultHash);
+  if (!hit) { $("rf-proof").innerHTML = row("current version", "no record found; try again later", "bad"); return; }
+  const got = await fetchDoc(dec.decode(decDyn(hit.data, 1)));
+  if (!got) { $("rf-proof").innerHTML = row("current version", "its record could not be fetched; try again later", "bad"); return; }
+  DOC = got.doc; JOB = jobIdOf(DOC);
+  $("rf-proof").innerHTML = row("current version", `<a href="${esc(got.src)}" target="_blank" rel="noopener">record ↗</a> · matches the contract ✓`);
+}
+async function rfWallet() {
+  if (!ACCOUNT || !S.asset) { $("rf-wallet").innerHTML = ""; $("rf-approve").disabled = $("rf-update").disabled = true; return; }
+  const bal = BigInt(await call(S.asset, "0x" + sel("balanceOf(address)") + word(ACCOUNT)));
+  const allow = BigInt(await call(S.asset, "0x" + sel("allowance(address,address)") + word(ACCOUNT) + word(CFG.tracker)));
+  const rows = [row("your IMD", imd(bal), bal >= S.price ? "" : "bad")];
+  const ready = S.open && DOC && JOB && bal >= S.price;
+  $("rf-approve").disabled = !(ready && allow < S.price); $("rf-update").disabled = true;
+  if (ready && allow >= S.price) {
+    try { const data = callUpdate(DOC, S.price); await call(CFG.tracker, data, ACCOUNT); const gas = parseInt(await rpc("eth_estimateGas", [{from: ACCOUNT, to: CFG.tracker, data}]), 16);
+      rows.push(row("ready", "approved; the refresh takes about " + gas.toLocaleString("en-US") + " gas")); $("rf-update").disabled = false; }
+    catch (e) { rows.push(row("blocked", esc(plain(e)), "bad")); }
+  } else if (ready) rows.push(row("step 1", "approve " + imd(S.price) + " for the contract, then refresh", "warn"));
+  else rows.push(row("refresh", S.state !== 2 ? "not now" : !S.open ? "not open yet" : !DOC ? "the current version's record is not available" : "you need " + imd(S.price) + " in this wallet", "warn"));
+  $("rf-wallet").innerHTML = rows.join("");
+}
+async function rfAll() { try { await rfState(); await rfProof(); await rfWallet(); } catch (e) { note("rf-note", "Could not read the contract: " + esc(e.message), "bad"); } }
+$("rf-connect").onclick = () => connect("rf-note").catch(e => note("rf-note", esc(e.message), "bad"));
+$("rf-approve").onclick = async () => { try { $("rf-approve").disabled = true; note("rf-note", "Confirm the approval in your wallet…"); const r = await send("rf-note", S.asset, "0x" + sel("approve(address,uint256)") + word(CFG.tracker) + word(S.price)); note("rf-note", r.status === "0x1" ? "Approved. Now refresh." : "The approval reverted.", r.status === "0x1" ? "" : "bad"); } catch (e) { note("rf-note", esc(e.message), "bad"); } await rfWallet(); };
+$("rf-update").onclick = async () => { try { $("rf-update").disabled = true; note("rf-note", "Confirm the refresh in your wallet…"); const r = await send("rf-note", CFG.tracker, callUpdate(DOC, S.price));
+  note("rf-note", r.status === "0x1" ? `Ordered: <a href="https://etherscan.io/tx/${esc(r.hash)}" target="_blank" rel="noopener">transaction ↗</a>. The swarm rebuilds the page now; the new version appears here in about twenty minutes.` : "The refresh reverted.", r.status === "0x1" ? "" : "bad"); await rfAll(); } catch (e) { note("rf-note", esc(e.message), "bad"); await rfWallet(); } };
+
+// ---------------------------------------------------------------- burn what the executor holds
+let X = {};
+const xcall = sig => call(CFG.executor, "0x" + sel(sig));
+async function bxState() {
+  const [bal, prev, recv, eid, minB, accrued, target] = await Promise.all([xcall("tokenBalance()"), xcall("previewBridge()"), xcall("baseBurnReceiver()"), xcall("dstEid()"), xcall("minBridgeAmount()"),
+    call(CFG.hook, "0x" + sel("imdToBurn()")), call(CFG.hook, "0x" + sel("burnExecutor()"))]);
+  const pw = words(prev);
+  X = {balance: BigInt(bal), send: BigInt("0x" + pw[0]), receive: BigInt("0x" + pw[1]), fee: BigInt("0x" + pw[2]), receiver: "0x" + words(recv)[0].slice(24), eid: parseInt(eid, 16), min: BigInt(minB),
+    accrued: BigInt(accrued), hookOk: "0x" + words(target)[0].slice(24) === CFG.executor};
+  X.ok = X.receiver === CFG.receiver && X.eid === CFG.dstEid; X.value = X.fee * CFG.headroom / 100n;
+  const rows = [row("on the executor", imd(X.balance) + (X.send > 0n ? "" : X.balance < X.min ? ", below the minimum of " + imd(X.min) : ", nothing to bridge right now"), X.send > 0n ? "" : "warn")];
+  if (X.send > 0n) rows.push(row("fee", eth(X.fee) + " over LayerZero; you attach " + eth(X.value) + ", the rest comes back in the same transaction"));
+  rows.push(row("destination", X.ok ? `the Base burn receiver <a href="https://basescan.org/address/${CFG.receiver}" target="_blank" rel="noopener">0xf9d7…6793</a> ✓` : "changed to " + esc(X.receiver) + " · not offered here", X.ok ? "" : "bad"));
+  $("bx-status").innerHTML = rows.join("");
+  $("bx-hook").innerHTML = X.accrued > 0n ? row("on the hook", imd(X.accrued) + (X.hookOk ? " accrued by launches, not on the executor yet; sweep it first" : " accrued, but the hook no longer feeds this executor"), "warn") : "";
+  $("bx-sweep").hidden = !(X.accrued > 0n && X.hookOk);
+  $("bx-bridge").textContent = X.send > 0n ? "Bridge and burn · fee ≈ " + eth(X.fee) : "Bridge and burn";
+}
+async function bxWallet() {
+  $("bx-sweep").disabled = $("bx-bridge").disabled = true;
+  if (!ACCOUNT || X.fee === undefined) { $("bx-wallet").innerHTML = ""; return; }
+  const bal = BigInt(await rpc("eth_getBalance", [ACCOUNT, "latest"])), gp = BigInt(await rpc("eth_gasPrice", []));
+  const rows = [row("your ETH", eth(bal))];
+  if (X.accrued > 0n && X.hookOk) { try { await call(CFG.hook, "0x" + sel("burnAccruedImd()"), ACCOUNT); $("bx-sweep").disabled = false; } catch (e) { rows.push(row("sweep", esc(plain(e)), "bad")); } }
+  if (!X.ok) rows.push(row("bridge", "not offered while the destination differs from the reviewed receiver", "bad"));
+  else if (X.send === 0n) rows.push(row("bridge", "nothing to bridge right now", "warn"));
+  else {
+    try {
+      const data = "0x" + sel("bridgeToBaseBurnReceiver()");
+      const out = (await call(CFG.executor, data, ACCOUNT, X.value)).slice(2); const w = i => BigInt("0x" + out.slice(64 * i, 64 * i + 64));
+      const gas = BigInt(await rpc("eth_estimateGas", [{from: ACCOUNT, to: CFG.executor, data, value: "0x" + X.value.toString(16)}]));
+      const need = X.value + gas * gp * 13n / 10n;
+      if (bal < need) rows.push(row("bridge", "this needs about " + eth(need) + " in the wallet (fee plus gas)", "bad"));
+      else { rows.push(row("ready", "sends " + imd(w(4)) + " to Base, " + imd(w(5)) + " burned on arrival; about " + gas.toLocaleString("en-US") + " gas")); $("bx-bridge").disabled = false; }
+    } catch (e) { rows.push(row("blocked", esc(plain(e)), "bad")); }
+  }
+  $("bx-wallet").innerHTML = rows.join("");
+}
+async function bxAll() { try { await bxState(); await bxWallet(); } catch (e) { note("bx-note", "Could not read the executor: " + esc(e.message), "bad"); } }
+$("bx-connect").onclick = () => connect("bx-note").catch(e => note("bx-note", esc(e.message), "bad"));
+$("bx-sweep").onclick = async () => { try { $("bx-sweep").disabled = true; note("bx-note", "Confirm the sweep in your wallet…"); const r = await send("bx-note", CFG.hook, "0x" + sel("burnAccruedImd()")); note("bx-note", r.status === "0x1" ? "Swept to the executor. Now bridge and burn." : "The sweep reverted.", r.status === "0x1" ? "" : "bad"); } catch (e) { note("bx-note", esc(e.message), "bad"); } await bxAll(); };
+$("bx-bridge").onclick = async () => { try { $("bx-bridge").disabled = true; note("bx-note", "Confirm the bridge in your wallet…"); const r = await send("bx-note", CFG.executor, "0x" + sel("bridgeToBaseBurnReceiver()"), X.value);
+  const ev = (r.logs || []).find(l => l.address.toLowerCase() === CFG.executor && l.topics[0] === topic("TokensBridgedForBurn(address,uint32,bytes32,uint256,uint256,bytes32)"));
+  const sent = ev ? imd(BigInt("0x" + words(ev.data)[0])) : "the IMD";
+  note("bx-note", r.status === "0x1" ? `Done: ${esc(sent)} is on its way to Base and burns on arrival, usually within minutes. <a href="https://etherscan.io/tx/${esc(r.hash)}" target="_blank" rel="noopener">transaction ↗</a>` : "The bridge reverted; only gas was spent.", r.status === "0x1" ? "" : "bad"); } catch (e) { note("bx-note", esc(e.message), "bad"); } await bxAll(); };
+
+loadContracts().then(() => { rfAll(); bxAll(); }).catch(e => { note("rf-note", esc(e.message), "bad"); note("bx-note", esc(e.message), "bad"); });
+})();
+</script>
 </body>
 </html>
