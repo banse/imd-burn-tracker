@@ -1,15 +1,15 @@
 [
  {
   "starting_supply": 10000000,
-  "supply_now": 7091660.286128,
+  "supply_now": 7091652.056112,
   "in_burn_wallets": 955.453373,
-  "circulating_now": 7090704.832756,
-  "on_base": 2859589.730081,
+  "circulating_now": 7090696.602739,
+  "on_base": 2859581.500065,
   "locked_for_bridges": 4232070.556047,
   "on_ethereum": 4165864.945986,
   "on_robinhood": 66081.646991,
   "awaiting_executor": 30.610276,
   "stuck_old_receiver": 1.0,
-  "as_of": "2026-10-25T02:01:33Z"
+  "as_of": "2026-10-25T02:22:41Z"
  }
 ]

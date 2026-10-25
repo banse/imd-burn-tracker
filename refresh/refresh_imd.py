@@ -165,13 +165,21 @@ locked = num(call("base_latest", FP, bal_data(adapter), bb))
 print("executors…", flush=True)
 executors = set(KNOWN_EXECUTORS)
 try:
+    # A contract found by name counts only with the token and the runtime bytecode of a known BurnExecutor.
+    known_code = {c for c in (rpc("eth", "eth_getCode", [k, eb]) for k in KNOWN_EXECUTORS) if c and c != "0x"}
     found = get_json(BLOCKSCOUT + "/api/v2/search?q=BurnExecutor")
     for it in found.get("items", []):
         if it.get("name") == "BurnExecutor" and it.get("type") == "contract":
             a = it["address_hash"].lower()
+            if a in executors:
+                continue
             tok = call("eth", a, sel("token()")[:10], eb)
-            if tok and tok[-40:].lower() == ETH[2:]:
+            if not tok or tok[-40:].lower() != ETH[2:]:
+                continue
+            if rpc("eth", "eth_getCode", [a, eb]) in known_code:
                 executors.add(a)
+            else:
+                print("executor found by name but ignored, unknown bytecode:", a)
 except Exception as e:
     print("executor search skipped:", e)
 executors = sorted(executors)

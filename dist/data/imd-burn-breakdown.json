@@ -2,9 +2,9 @@
  {
   "route": "Base \u00b7 Fren Pet native",
   "chain": "Base",
-  "burn_function": 2750868.181491,
+  "burn_function": 2750876.411507,
   "burn_wallets": 45.377364,
-  "total_burned": 2750913.558854,
+  "total_burned": 2750921.788871,
   "how": "burn() on the Base token (Fren Pet) by anyone except the BurnExecutor's receiver, plus Base burn wallets"
  },
  {

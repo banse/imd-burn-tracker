@@ -195,10 +195,17 @@ export async function refreshData(env = process.env, {pause = sleep} = {}) {
   console.log('executors…');
   const executorSet = new Set(KNOWN_EXECUTORS);
   try {
+    // A contract found by name counts only with the token and the runtime bytecode of a known BurnExecutor.
+    const getCode = a => rpc('eth', 'eth_getCode', [a, eb]);
+    const knownCode = new Set((await Promise.all(KNOWN_EXECUTORS.map(getCode))).filter(c => c && c !== '0x'));
     const found = await getJson(BLOCKSCOUT + '/api/v2/search?q=BurnExecutor');
     for (const it of found.items || []) if (it.name === 'BurnExecutor' && it.type === 'contract') {
-      const a = it.address_hash.toLowerCase(), tok = await call('eth', a, selector('token()'), eb);
-      if (tok && tok.slice(-40).toLowerCase() === ETH.slice(2)) executorSet.add(a);
+      const a = it.address_hash.toLowerCase();
+      if (executorSet.has(a)) continue;
+      const tok = await call('eth', a, selector('token()'), eb);
+      if (!tok || tok.slice(-40).toLowerCase() !== ETH.slice(2)) continue;
+      if (knownCode.has(await getCode(a))) executorSet.add(a);
+      else console.log('executor found by name but ignored, unknown bytecode:', a);
     }
   } catch (e) { console.log('executor search skipped:', e.message); }
   const executors = [...executorSet].sort(), currentReceivers = new Set();
